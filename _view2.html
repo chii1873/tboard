@@ -1,0 +1,25 @@
+<table border=0 cellpadding=0 cellspacing=0 width=700 bgcolor="##body_text##">
+<tr><td>
+<table border=0 cellpadding=3 cellspacing=1 width=100%>
+<tr><td bgcolor="##body_bgcolor##"><span style="font-size:12pt;font-weight:bold;">##subject##</span>　(No.##msgno####cid##)
+<br>
+<nobr>■投稿日時：##reg_date##　</nobr>
+<nobr>■投稿者：##name####age####pref####sex####email####url##</nobr>
+
+<nobr>■接続元：##remote_host##</nobr>
+</td></tr>
+<tr><td bgcolor="##body_bgcolor##">
+<table cellspacing=12>
+<tr><td>##icon_dsp##</td>
+<td valign=top>##message##
+##message2##</td></tr></table>
+
+<!-- moddel_begin -->
+<div align=right>
+<input type=button value="この記事に返信する" onclick="location.href='##script_name##?com&pno=##msgno##'" style=background-color:##body_bgcolor##;border:solid;border-width:1px;border-color:##body_text##;>
+<input type=hidden name=msgno value="##msgno##">
+<input type=##submit_mode## name=mod value="変更" style=background-color:##body_bgcolor##;border:solid;border-width:1px;border-color:##body_text##; onclick="">
+<input type=##submit_mode## name=del_confirm value="削除" style=background-color:##body_bgcolor##;border:solid;border-width:1px;border-color:##body_text##;>
+</div>
+<!-- moddel_end -->
+</td></tr></table></td></tr></table>

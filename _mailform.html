@@ -1,0 +1,27 @@
+<table><tr><td></td></tr></table>
+<input type=hidden name=msgno value=##msgno##>
+
+<table border=0 cellpadding=0 cellspacing=0 width=700 bgcolor="##body_text##">
+<tr><td><table border=0 cellpadding=3 cellspacing=1 width=100%>
+<tr><td nowrap bgcolor="##body_bgcolor##" colspan=2>◆No.##msgno##「##subject##」の投稿者(##name##)に対してメールを転送します。</td>
+</tr>
+<tr><th nowrap bgcolor="##body_bgcolor##">お名前</th>
+<td bgcolor="##body_bgcolor##"><input name=name value="##name##" size=30 maxlength=30></td></tr>
+<tr><th bgcolor="##body_bgcolor##">E-mail</th>
+<td bgcolor="##body_bgcolor##"><input name=email value="##email##" size=40>
+</td></tr>
+
+<tr><th bgcolor="##body_bgcolor##">件名</th>
+<td bgcolor="##body_bgcolor##"><input name=subject size=60>
+</td></tr>
+
+<tr><th bgcolor="##body_bgcolor##">本文</th>
+<td bgcolor="##body_bgcolor##">
+<textarea name=message cols=80 rows=10 wrap=off></textarea></td></tr>
+</table>
+</td></tr>
+</table><p>
+
+<input type=submit name=mailform_done value="送信する" style=background-color:##body_bgcolor##;border:solid;border-width:1px;border-color:##body_text##;>
+<input type=button value=戻　る onclick=history.back() style=background-color:##body_bgcolor##;border:solid;border-width:1px;border-color:##body_text##;>
+

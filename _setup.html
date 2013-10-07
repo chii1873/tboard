@@ -1,0 +1,295 @@
+##prod_name## v##version##の設定を行ないます。<br>
+初めての設定のときは、初期値が選択(または指定)されています。<br>
+2回目以降の設定のときは、tboard_conf.plの内容が初期値となります。
+
+<form action=##script_name## method=post>
+##init##<hr noshade>
+<div align=right>
+<input type=submit name=setup2 value="下記の内容で設定する"></div>
+<hr noshade>
+
+<table border cellpadding=3 cellspacing=0 width=660>
+<tr><td><b>(1-1)##prod_name## v##version##のタイトル</b><br>
+<table border cellpadding=3 cellspacing=0>
+<tr><td>タイトル</td><td><input name=title value="##title##" size=50><br>
+文字色…<input name=title_color value="##title_color##"><br>
+文字サイズ…<input name=title_font_size value="##title_font_size##" size=5>ポイント(pt)<br>
+<input type=checkbox name=title_is_bold value="1" ##title_is_bold:1##>ボールド(太字)にする
+</td>
+<tr><td>イメージURL</td><td><input name=title_img value="##title_img##" size=60></td>
+<tr><td>表示位置</td><td><input type=radio name=title_align value=left ##title_align:left##>左寄せ
+<input type=radio name=title_align value=center ##title_align:center##>中央寄せ
+<input type=radio name=title_align value=right ##title_align:right##>右寄せ</td>
+</table>
+<span style="font-size:9pt">※このシステムのタイトルを指定してください。<br>
+※イメージのURL欄を指定した場合、タイトル文字列の代わりにイメージを表示します。
+</span></td></tr>
+<tr><td><b>(1-2)タイトル下の説明文</b><br>
+<textarea name=description cols=70 rows=5 wrap=off>##description##</textarea><br>
+<span style="font-size:9pt">※タイトルの直下に表示させる説明文を指定します。</span></td></tr>
+<tr><td><b>(1-3)このプログラムのURL</b><br>
+<input name=script_url value="##script_url##" size=60><br>
+<span style="font-size:9pt">※このプログラム自身のURLを指定します。省略すると環境変数SERVER_NAME,REQUEST_URIの値が使われます。<br>
+※転送メール、返信通知メールの本文内のリンク先を指定するのに使われます。
+</span>
+</td></tr>
+<tr><td><b>(1-4)ホームページのURL</b><br>
+<input name=home_url value="##home_url##" size=60><br>
+<span style="font-size:9pt">※ナビバーのHOMEボタンのリンク先となります。</span>
+</td></tr>
+<tr><td><b>(1-5)管理者のメールアドレス</b><br>
+<input name=k_email value="##k_email##" size=50><br>
+<span style="font-size:9pt">※返信通知メールの差出人として使われます。</span></td></tr>
+<tr><td><b>(2-1)保存するツリー/スレッドの数</b><br>
+<select name=tree_max>
+<option ##tree_max:50##>50
+<option ##tree_max:100##>100
+<option ##tree_max:150##>150
+<option ##tree_max:200##>200
+<option ##tree_max:250##>250
+<option ##tree_max:300##>300
+</select>ツリーを超えたら<select name=del_tree_method>
+<option ##del_tree_method:1##>最終レスの投稿日時の古いものから
+<option ##del_tree_method:2##>親記事の投稿日時の古いものから
+</select>削除する<br>
+
+<span style="font-size:9pt">※指定されたツリーの数を超えた場合に、古いツリーから削除します。</span>
+</td></tr>
+<tr><td><b>(2-2)1ページに表示する数</b><sub> </sub><br>
+<table border cellpadding=3 cellspacing=0>
+<tr><td>ツリー表示</td>
+<td><select name=page_disp_tree>
+<option ##page_disp_tree:1##>1
+<option ##page_disp_tree:2##>2
+<option ##page_disp_tree:3##>3
+<option ##page_disp_tree:4##>4
+<option ##page_disp_tree:5##>5
+<option ##page_disp_tree:6##>6
+<option ##page_disp_tree:7##>7
+<option ##page_disp_tree:8##>8
+<option ##page_disp_tree:9##>9
+<option ##page_disp_tree:10##>10
+<option ##page_disp_tree:12##>12
+<option ##page_disp_tree:15##>15
+<option ##page_disp_tree:20##>20
+<option ##page_disp_tree:25##>25
+<option ##page_disp_tree:30##>30
+</select>ツリー/ページ</td></tr>
+<tr><td>スレッド表示</td>
+<td><select name=page_disp_thread>
+<option ##page_disp_thread:1##>1
+<option ##page_disp_thread:2##>2
+<option ##page_disp_thread:3##>3
+<option ##page_disp_thread:4##>4
+<option ##page_disp_thread:5##>5
+<option ##page_disp_thread:6##>6
+<option ##page_disp_thread:7##>7
+<option ##page_disp_thread:8##>8
+<option ##page_disp_thread:9##>9
+<option ##page_disp_thread:10##>10
+<option ##page_disp_thread:12##>12
+<option ##page_disp_thread:15##>15
+<option ##page_disp_thread:20##>20
+<option ##page_disp_thread:25##>25
+<option ##page_disp_thread:30##>30
+</select>スレッド/ページ</td></tr>
+<tr><td>一覧表示</td>
+<td><table border cellpadding=3 cellspacing=0>
+<tr><td>タイトルのみリスト</td>
+<td><select name=page_disp_list>
+<option ##page_disp_list:1##>1
+<option ##page_disp_list:2##>2
+<option ##page_disp_list:3##>3
+<option ##page_disp_list:4##>4
+<option ##page_disp_list:5##>5
+<option ##page_disp_list:6##>6
+<option ##page_disp_list:7##>7
+<option ##page_disp_list:8##>8
+<option ##page_disp_list:9##>9
+<option ##page_disp_list:10##>10
+<option ##page_disp_list:12##>12
+<option ##page_disp_list:15##>15
+<option ##page_disp_list:20##>20
+<option ##page_disp_list:25##>25
+<option ##page_disp_list:30##>30
+</select>件/ページ</td></tr>
+<tr><td>全表示リスト</td>
+<td><select name=page_disp_list2>
+<option ##page_disp_list2:1##>1
+<option ##page_disp_list2:2##>2
+<option ##page_disp_list2:3##>3
+<option ##page_disp_list2:4##>4
+<option ##page_disp_list2:5##>5
+<option ##page_disp_list2:6##>6
+<option ##page_disp_list2:7##>7
+<option ##page_disp_list2:8##>8
+<option ##page_disp_list2:9##>9
+<option ##page_disp_list2:10##>10
+<option ##page_disp_list2:12##>12
+<option ##page_disp_list2:15##>15
+<option ##page_disp_list2:20##>20
+<option ##page_disp_list2:25##>25
+<option ##page_disp_list2:30##>30
+</select>件/ページ</td></tr>
+</table></td></tr>
+<tr><td>トピック表示</td>
+<td><select name=page_disp_topic>
+<option ##page_disp_topic:1##>1
+<option ##page_disp_topic:2##>2
+<option ##page_disp_topic:3##>3
+<option ##page_disp_topic:4##>4
+<option ##page_disp_topic:5##>5
+<option ##page_disp_topic:6##>6
+<option ##page_disp_topic:7##>7
+<option ##page_disp_topic:8##>8
+<option ##page_disp_topic:9##>9
+<option ##page_disp_topic:10##>10
+<option ##page_disp_topic:12##>12
+<option ##page_disp_topic:15##>15
+<option ##page_disp_topic:20##>20
+<option ##page_disp_topic:25##>25
+<option ##page_disp_topic:30##>30
+</select>トピック/ページ</td></tr>
+</table>
+</td></tr>
+<tr><td><b>(2-3)投稿一覧ページの件名の省略指定</b><br>
+<select name=subject_length>
+<option value="0" ##subject_length:0##>省略しない
+<option value="60" ##subject_length:60##>全角30文字を超えたら省略する
+<option value="70" ##subject_length:70##>全角35文字を超えたら省略する
+<option value="80" ##subject_length:80##>全角40文字を超えたら省略する
+<option value="90" ##subject_length:90##>全角45文字を超えたら省略する
+<option value="100" ##subject_length:100##>全角50文字を超えたら省略する
+</select><br>
+<span style="font-size:9pt">※投稿一覧ページの件名が長い場合に一定字数を超えた部分を省略するかどうかを指定します。<br>
+※この指定にかかわらず、詳細ページの件名は省略されずに表示します。</span>
+</td></tr>
+<tr><td><b>(3-1)投稿の件名/本文の表示文字色のリスト</b><br>
+
+通常：<input name=color value="##color##" size=80><br>
+管理モード時のみ追加：<input name=admin_color value="##admin_color##" size=60><br>
+
+<span style="font-size:9pt">※投稿の件名/本文の表示文字色のリスト半角スペース区切りで複数指定します。<br>
+※管理モードのときは、「通常」のリストに加えて「管理モード時のみ追加」のリストからも色を選べるようになります。色で管理者の書き込みを区別したいときにご利用ください。</span></td></tr>
+<tr><td><b>(3-2)性別選択肢の指定</b><br>
+<input name=sexstr value="##sexstr##" size=60><br>
+<span style="font-size:9pt">※性別文字列を半角スペースで区切って複数指定します。</span>
+</td></tr>
+<tr><td><b>(3-3)地域名選択肢の指定</b><br>
+<textarea name=prefstr cols=60 rows=6 wrap=virtual>##prefstr##</textarea><br>
+<span style="font-size:9pt">※地域名文字列を半角スペースで区切って複数指定します。</span>
+</td></tr>
+<tr><td><b>(3-4)年齢選択肢の指定</b><br>
+<textarea name=agestr cols=60 rows=6 wrap=virtual>##agestr##</textarea><br>
+<span style="font-size:9pt">※年齢文字列を半角スペースで区切って複数指定します。</span>
+</td></tr>
+<tr><td><b>(4)BODYタグオプションなど</b><br>
+<table border cellpadding=3 cellspacing=0>
+<tr><td>text(文字色)</td>
+<td><input name=body_text value="##body_text##"></td></tr>
+<tr><td>bgcolor(背景色)</td>
+<td><input name=body_bgcolor value="##body_bgcolor##"></td></tr>
+<tr><td>link(リンク色)</td>
+<td><input name=body_link value="##body_link##"></td></tr>
+<tr><td>alink(クリック色)</td>
+<td><input name=body_alink value="##body_alink##"></td></tr>
+<tr><td>vlink(既訪リンク色)</td>
+<td><input name=body_vlink value="##body_vlink##"></td></tr>
+<tr><td>background(背景イメージ)</td>
+<td><input name=body_background value="##body_background##" size=50></td></tr>
+<tr><td>スタイルシート</td>
+<td><textarea name=stylesheet cols=60 rows=4 wrap=off>##stylesheet##</textarea></td></tr>
+</table>
+</td></tr>
+<tr><td><b>(5-1)投稿項目のオプション</b><br>
+<table border cellpadding=3 cellspacing=0>
+<tr><td>年齢欄</td>
+<td><input type=radio name=opt_age value=1 ##opt_age:1##>使用する
+<input type=radio name=opt_age value=0 ##opt_age:0##>使用しない</td></tr>
+<tr><td>性別欄</td>
+<td><input type=radio name=opt_sex value=1 ##opt_sex:1##>使用する
+<input type=radio name=opt_sex value=0 ##opt_sex:0##>使用しない</td></tr>
+<tr><td>地域欄</td>
+<td><input type=radio name=opt_pref value=1 ##opt_pref:1##>使用する
+<input type=radio name=opt_pref value=0 ##opt_pref:0##>使用しない</td></tr>
+<tr><td>メール転送</td>
+<td><input type=radio name=opt_email_mode value=1 ##opt_email_mode:1##>使用する
+<input type=radio name=opt_email_mode value=0 ##opt_email_mode:0##>使用しない</td></tr>
+<tr><td>レスがついたときにメールで知らせる機能</td>
+<td><input type=radio name=opt_notify value=1 ##opt_notify:1##>使用する
+<input type=radio name=opt_notify value=0 ##opt_notify:0##>使用しない</td></tr>
+<tr><td>URL欄</td>
+<td><input type=radio name=opt_url value=1 ##opt_url:1##>使用する
+<input type=radio name=opt_url value=0 ##opt_url:0##>使用しない</td></tr>
+<tr><td>解決マーク</td>
+<td><input type=radio name=opt_solved value=1 ##opt_solved:1##>使用する
+<input type=radio name=opt_solved value=0 ##opt_solved:0##>使用しない<br>
+解決マーク：<input name=opt_solved_str size=40 value="##opt_solved_str##"></td></tr>
+<tr><td>管理人連絡欄</td>
+<td><input type=radio name=opt_message2 value=1 ##opt_message2:1##>使用する
+<input type=radio name=opt_message2 value=0 ##opt_message2:0##>使用しない</td></tr>
+<tr><td>cookie-ID</td>
+<td><input type=radio name=opt_cid value=1 ##opt_cid:1##>使用する
+<input type=radio name=opt_cid value=0 ##opt_cid:0##>使用しない</td></tr>
+<tr><td>アイコン</td>
+<td><input type=radio name=opt_icon value=1 ##opt_icon:1##>使用する
+<input type=radio name=opt_icon value=0 ##opt_icon:0##>使用しない<br>
+<table border=0 cellpadding=0 cellspacing=0>
+<tr><td>アイコンファイル</td>
+<td><textarea name=icon_list cols=24 rows=6 wrap=off>##icon_list##</textarea></td>
+<td>アイコン名</td>
+<td><textarea name=icon_list_str cols=24 rows=6 wrap=off>##icon_list_str##</textarea></td></tr>
+</table>
+<span style="font-size:9pt">※アイコンは、img/iconディレクトリに置いてください。<br>
+※アイコンファイル名とアイコン名は1対1で対応させてください。</span>
+</td></tr>
+
+</table></td></tr>
+<tr><td><b>(5-2)動作モード</b><br>
+<table border cellpadding=3 cellspacing=0>
+<tr><td>投稿記事の削除</td>
+<td><input type=radio name=opt_permit_del value=1 ##opt_permit_del:1##>許可する
+<input type=radio name=opt_permit_del value=0 ##opt_permit_del:0##>禁止する</td></tr>
+<tr><td>投稿記事の修正</td>
+<td><input type=radio name=opt_permit_mod value=1 ##opt_permit_mod:1##>許可する
+<input type=radio name=opt_permit_mod value=0 ##opt_permit_mod:0##>禁止する</td></tr>
+<tr><td>事前登録制限</td>
+<td><input type=radio name=opt_memonly value=1 ##opt_memonly:1## disabled>書き込みのみ
+<input type=radio name=opt_memonly value=2 ##opt_memonly:2## disabled>閲覧+書き込み
+<input type=radio name=opt_memonly value=0 ##opt_memonly:0## checked>制限しない</td></tr>
+
+</table></td></tr>
+<tr><td><b>(6)NEWマークの表示</b><br>
+<select name=new_mark>
+<option value="0">表示しない
+<option value="1" ##new_mark:1##>1時間
+<option value="2" ##new_mark:2##>2時間
+<option value="3" ##new_mark:3##>3時間
+<option value="4" ##new_mark:4##>4時間
+<option value="5" ##new_mark:5##>5時間
+<option value="6" ##new_mark:6##>6時間
+<option value="9" ##new_mark:9##>9時間
+<option value="12" ##new_mark:12##>12時間
+<option value="24" ##new_mark:24##>1日
+<option value="48" ##new_mark:48##>2日
+<option value="72" ##new_mark:72##>3日
+<option value="96" ##new_mark:96##>4日
+<option value="120" ##new_mark:120##>5日
+<option value="144" ##new_mark:144##>6日
+<option value="168" ##new_mark:168##>7日
+</select><br>
+NEWマークの指定：<input name=new_mark_str value="##new_mark_str##" size=60><br>
+UPマークの指定：<input name=up_mark_str value="##up_mark_str##" size=60><br>
+<span style="font-size:9pt">※投稿一覧で、投稿/修正後どれだけの間NEW/UPマークを表示するかを指定します。</span>
+</td></tr>
+<tr><td><b>(7)メール送信方法</b><br>
+<input type=radio name=mailsend value=sendmail ##mailsend:sendmail##>sendmailを使用する
+…sendmailのパス：<input name=sendmail value="##sendmail##" size=30><br>
+<input type=radio name=mailsend value=smtp ##mailsend:smtp##>Net::SMTPを使用する
+…SMTPホスト：<input name=smtp value="##smtp##" size=30>
+</td></tr>
+</table>
+
+<hr noshade>
+<div align=right>
+<input type=submit name=setup2 value="上記の内容で設定する"></div>

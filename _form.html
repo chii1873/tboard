@@ -1,0 +1,105 @@
+<!-- errmsg_begin -->
+<table border=0 cellpadding=0 cellspacing=3 width=700>
+<tr><td><font color="##body_link##">◆以下のエラーがありました。入力内容をご確認ください。<br>
+##errmsg##
+</font></td></tr></table>
+<table><tr><td></td></tr></table>
+<!-- errmsg_end -->
+
+　<span class=description>※</span><sup><b>*</b></sup><span class=description>印は入力必須です。</span>
+
+<table><tr><td></td></tr></table>
+##navi_bar##
+<table><tr><td></td></tr></table>
+
+<table border=0 cellpadding=0 cellspacing=0 width=700 bgcolor="##body_text##">
+<tr><td>
+<table border=0 cellpadding=3 cellspacing=1 width=100%>
+<tr><td colspan=2 bgcolor="##body_bgcolor##">◆##com_type##</td></tr>
+
+<tr><th nowrap bgcolor="##body_bgcolor##">お名前<sup><b>*</b></sup></th>
+<td bgcolor="##body_bgcolor##"><input name=name value="##name##" size=30 maxlength=30>##cid##<br>
+<!-- OPT_SEX_BEGIN -->
+<b>性別：</b><select name=sex><option value="">##sexlist##</select>　
+<!-- OPT_SEX_END -->
+<!-- OPT_AGE_BEGIN -->
+<b>年齢：</b><select name=age><option value="">##agelist##</select>　
+<!-- OPT_AGE_END -->
+<!-- OPT_PREF_BEGIN -->
+<b>地域：</b><select name=pref><option value="">##preflist##</select>　
+<!-- OPT_PREF_END -->
+</td></tr>
+<tr><th bgcolor="##body_bgcolor##">E-mail</th>
+<td bgcolor="##body_bgcolor##"><input name=email value="##email##" size=40>
+<span class=description>[<input type=radio name=email_mode value=1 ##email_mode:1##>公開
+<!-- OPT_EMAIL_MODE_BEGIN -->
+<input type=radio name=email_mode value=2 ##email_mode:2##>転送
+<!-- OPT_EMAIL_MODE_END -->
+<input type=radio name=email_mode value=0 ##email_mode:0##>非公開]
+<!-- OPT_NOTIFY_BEGIN -->
+<br>
+<input type=checkbox name=notify value=1 ##notify:1##>レスがついたときにメールで知らせる
+<!-- OPT_NOTIFY_END -->
+</span><sub> </sub><br>
+<span class=description>※「公開」を選ぶと、アドレスを公開し、リンクを知られずにメールを受け取ることができます。<br>
+<!-- OPT_EMAIL_MODE_BEGIN -->
+※「転送」を選ぶと、アドレスを知られずにメールを受け取ることができます。<br>
+<!-- OPT_EMAIL_MODE_END -->
+※「非公開」を選ぶと、管理人のみにアドレスを伝えることができます。
+</span></td></tr>
+
+<!-- OPT_URL_BEGIN -->
+<tr><th bgcolor="##body_bgcolor##">URL</th>
+<td bgcolor="##body_bgcolor##"><input name=url value="##url##" size=50></td></tr>
+<!-- OPT_URL_END -->
+<tr><th bgcolor="##body_bgcolor##">件名</th>
+<td bgcolor="##body_bgcolor##"><input name=subject value="##subject##" size=60>
+<!-- OPT_SUBJECT_COLOR_BEGIN -->
+<br>##subject_colorlist##
+<!-- OPT_SUBJECT_COLOR_END -->
+</td></tr>
+
+<tr><th bgcolor="##body_bgcolor##">本文<sup><b>*</b></sup></th>
+<td bgcolor="##body_bgcolor##">
+<!-- OPT_SOLVED_BEGIN -->
+<input type=checkbox name=solved value=1><font color=red>解決!</font>
+<span class=description>…問題が解決したらチェックしてください。</span><br>
+<!-- OPT_SOLVED_END -->
+<textarea name=message cols=80 rows=10 wrap=virtual>##message##</textarea><br>
+<!-- OPT_MESSAGE_COLOR_BEGIN -->
+##message_colorlist##<br>
+<!-- OPT_MESSAGE_COLOR_END -->
+<span class=description>※タグは無効です。<br>
+<input type=checkbox name=do_link value=1 ##do_link:1##>本文中のURLに自動リンクを張る<br>
+<input type=checkbox name=pre value=1 ##pre:1##>本文全体を&lt;pre&gt;タグで囲む
+</span></td></tr>
+
+<!-- OPT_MESSAGE2_BEGIN -->
+<tr><th bgcolor="##body_bgcolor##">管理人連絡用</th>
+<td bgcolor="##body_bgcolor##">
+<textarea name=message2 cols=80 rows=5 wrap=virtual>##message2##</textarea><br>
+
+<span class=description>※この欄に記入した書き込みは、管理人にしか表示されません。他の人に見せたくない情報(URLやパスワードなど)の書き込みに利用してください。
+</span></td></tr>
+<!-- OPT_MESSAGE2_END -->
+<!-- OPT_ICON_BEGIN -->
+<tr><th bgcolor="##body_bgcolor##">アイコン</th>
+<td bgcolor="##body_bgcolor##">
+<select name=icon>
+<option value="">
+##iconlist##</select>　<a href=##script_name##?view_icon target=icon>アイコン一覧</a>
+</td></tr>
+<!-- OPT_ICON_END -->
+<tr><td colspan=2 bgcolor="##body_bgcolor##"><b>修正/削除用パスワード :</b>
+<input type=password name=passwd value="##passwd##" size=8>
+</td></tr>
+</table>
+</td></tr>
+</table>
+
+<p>
+
+<input type=hidden name=sid value="##sid##">
+<input type=submit name=com_confirm value="投稿内容を確認する" style=background-color:##body_bgcolor##;border:solid;border-width:1px;border-color:##body_text##;>
+<input type=button value=戻　る onclick=history.back() style=background-color:##body_bgcolor##;border:solid;border-width:1px;border-color:##body_text##;>
+<input type=button value="投稿中止" style=background-color:##body_bgcolor##;border:solid;border-width:1px;border-color:##body_text##; onclick="if(confirm('編集途中のデータを破棄して投稿を中止しますか?')){location.href='##script_name##?com_cancel&sid=##sid##'}">
