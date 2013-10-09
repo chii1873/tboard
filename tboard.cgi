@@ -1,21 +1,21 @@
 #!/usr/bin/perl -Tw
 # ---------------------------------------------------------------
-#  - ¥·¥¹¥Æ¥àÌ¾    Tree Board
-#  - ¥Ğ¡¼¥¸¥ç¥ó    0.1
-#  - ¸ø³«Ç¯·îÆü    2004/10/10
-#  - ¥¹¥¯¥ê¥×¥ÈÌ¾  tboard.cgi
-#  - Ãøºî¸¢É½¼¨    (c)1997-2004 Perl Script Laboratory
-#  - Ï¢  Íí  Àè    info@psl.ne.jp (http://www.psl.ne.jp/)
+#  - ã‚·ã‚¹ãƒ†ãƒ å    Tree Board
+#  - ãƒãƒ¼ã‚¸ãƒ§ãƒ³    0.1
+#  - å…¬é–‹å¹´æœˆæ—¥    2004/10/10
+#  - ã‚¹ã‚¯ãƒªãƒ—ãƒˆå  tboard.cgi
+#  - è‘—ä½œæ¨©è¡¨ç¤º    (c)1997-2004 Perl Script Laboratory
+#  - é€£  çµ¡  å…ˆ    info@psl.ne.jp (http://www.psl.ne.jp/)
 # ---------------------------------------------------------------
-# ¤´ÍøÍÑ¤Ë¤¢¤¿¤Ã¤Æ¤ÎÃí°Õ
-#   ¢¨¤³¤Î¥·¥¹¥Æ¥à¤Ï¥Õ¥ê¡¼¥¦¥¨¥¢¤Ç¤¹¡£
-#   ¢¨¤³¤Î¥·¥¹¥Æ¥à¤Ï¡¢¡ÖÍøÍÑµ¬Ìó¡×¤ò¤ªÆÉ¤ß¤Î¾å¤´ÍøÍÑ¤¯¤À¤µ¤¤¡£
+# ã”åˆ©ç”¨ã«ã‚ãŸã£ã¦ã®æ³¨æ„
+#   â€»ã“ã®ã‚·ã‚¹ãƒ†ãƒ ã¯ãƒ•ãƒªãƒ¼ã‚¦ã‚¨ã‚¢ã§ã™ã€‚
+#   â€»ã“ã®ã‚·ã‚¹ãƒ†ãƒ ã¯ã€ã€Œåˆ©ç”¨è¦ç´„ã€ã‚’ãŠèª­ã¿ã®ä¸Šã”åˆ©ç”¨ãã ã•ã„ã€‚
 #     http://www.psl.ne.jp/lab/copyright.html
 # ---------------------------------------------------------------
 use strict;
 use vars qw(%FORM %CONF %tables $LOCKED $smtp);
 use CGI::Carp qw(fatalsToBrowser);
-require 'jcode.pl';
+use Unicode::Japanese;
 %CONF = setver();
 _init();
 umask 0;
@@ -33,7 +33,7 @@ if (-e './tboard_conf.pl') {
 my $q;
 if ($CONF{img_upload}) {
     eval { use CGI qw(param uploadInfo); };
-    error("CGI¥â¥¸¥å¡¼¥ë¤Î¥¤¥ó¥İ¡¼¥È¤¬¤Ç¤­¤Ş¤»¤ó¤Ç¤·¤¿¡£: $@") if $@;
+    error("CGIãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®ã‚¤ãƒ³ãƒãƒ¼ãƒˆãŒã§ãã¾ã›ã‚“ã§ã—ãŸã€‚: $@") if $@;
     $q = new CGI;
 }
 %FORM = decoding($q);
@@ -72,10 +72,10 @@ sub _init {
 
     %CONF = (%CONF,
 	hl_bgcolor => q{#ffcccc},
-	prev0str => q{<font color=#999999>&lt;&lt; Á°¥Ú¡¼¥¸</font>},
-	prev1str => q{&lt;&lt; Á°¥Ú¡¼¥¸},
-	next0str => q{<font color=#999999>¼¡¥Ú¡¼¥¸ &gt;&gt;</font>},
-	next1str => q{¼¡¥Ú¡¼¥¸ &gt;&gt;},
+	prev0str => q{<font color=#999999>&lt;&lt; å‰ãƒšãƒ¼ã‚¸</font>},
+	prev1str => q{&lt;&lt; å‰ãƒšãƒ¼ã‚¸},
+	next0str => q{<font color=#999999>æ¬¡ãƒšãƒ¼ã‚¸ &gt;&gt;</font>},
+	next1str => q{æ¬¡ãƒšãƒ¼ã‚¸ &gt;&gt;},
 	script_name => q{tboard.cgi},
 	tempfile_del_hour => 6,
 	cookie_expire_days => 30,
@@ -97,8 +97,8 @@ sub _init {
 	 page_disp_tree page_disp_thread page_disp_list page_disp_list2
 	 page_disp_topic icon)],
 	list_header => {
-	  list => qq{<table border=0 cellpadding=0 cellspacing=0 width=700 bgcolor="##body_text##"><tr><td><table border=0 cellpadding=5 cellspacing=1 width=100%>\n<tr><td bgcolor=##body_bgcolor## width=390 align=center>·ï¡¡¡¡Ì¾</td><td bgcolor=##body_bgcolor## width=160 align=center>Åê¹Æ¼Ô</td><td bgcolor=##body_bgcolor## align=center width=140>Åê¹ÆÆü»ş</td></tr>\n},
-	  topic => qq{<table border=0 cellpadding=0 cellspacing=0 width=700 bgcolor="##body_text##"><tr><td><table border=0 cellpadding=5 cellspacing=1 width=100%>\n<tr><td bgcolor=##body_bgcolor## width=350 align=center>·ï¡¡¡¡Ì¾</td><td bgcolor=##body_bgcolor## width=150 align=center>Åê¹Æ¼Ô</td><td bgcolor=##body_bgcolor## align=center width=140>Åê¹ÆÆü»ş</td><td bgcolor=##body_bgcolor## align=center width=50>Åê¹Æ¿ô</td></tr>\n},
+	  list => qq{<table border=0 cellpadding=0 cellspacing=0 width=700 bgcolor="##body_text##"><tr><td><table border=0 cellpadding=5 cellspacing=1 width=100%>\n<tr><td bgcolor=##body_bgcolor## width=390 align=center>ä»¶ã€€ã€€å</td><td bgcolor=##body_bgcolor## width=160 align=center>æŠ•ç¨¿è€…</td><td bgcolor=##body_bgcolor## align=center width=140>æŠ•ç¨¿æ—¥æ™‚</td></tr>\n},
+	  topic => qq{<table border=0 cellpadding=0 cellspacing=0 width=700 bgcolor="##body_text##"><tr><td><table border=0 cellpadding=5 cellspacing=1 width=100%>\n<tr><td bgcolor=##body_bgcolor## width=350 align=center>ä»¶ã€€ã€€å</td><td bgcolor=##body_bgcolor## width=150 align=center>æŠ•ç¨¿è€…</td><td bgcolor=##body_bgcolor## align=center width=140>æŠ•ç¨¿æ—¥æ™‚</td><td bgcolor=##body_bgcolor## align=center width=50>æŠ•ç¨¿æ•°</td></tr>\n},
 	},
 	list_footer => {
 	  list => qq{</td></tr></table></td></tr></table><p>\n},
@@ -125,14 +125,14 @@ STR
 <td bgcolor=##body_bgcolor## align=right width=30>##message_cnt##</td>
 </tr>
 STR
-    $CONF{message_permission} = $CONF{script_name} . q{¤òÀßÃÖ¤·¤¿¥Ç¥£¥ì¥¯¥È¥ê¤Î¥Ñ¡¼¥ß¥Ã¥·¥ç¥ó¤¬707(suExec¤Ê¤É¤Î´Ä¶­¤Î¾ì¹ç¤Ï700¤Ê¤É)¤Ë¤Ê¤Ã¤Æ¤¤¤ë¤«³ÎÇ§¤·¤Æ¤¯¤À¤µ¤¤¡£};
+    $CONF{message_permission} = $CONF{script_name} . q{ã‚’è¨­ç½®ã—ãŸãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®ãƒ‘ãƒ¼ãƒŸãƒƒã‚·ãƒ§ãƒ³ãŒ707(suExecãªã©ã®ç’°å¢ƒã®å ´åˆã¯700ãªã©)ã«ãªã£ã¦ã„ã‚‹ã‹ç¢ºèªã—ã¦ãã ã•ã„ã€‚};
 }
 
 sub _admin_header {
 
     my $subtitle = shift;
     return <<STR;
-Content-type: text/html; charset=euc-jp
+Content-type: text/html; charset=utf-8
 
 <html><head><title>$CONF{prod_name} v$CONF{version} $subtitle</title>
 <meta name="robots" content="noindex, nofollow">
@@ -189,7 +189,7 @@ sub _header {
 
 #    my $admin_str = admin_str(get_cookie('TBOARD_ADMIN'));
     return <<STR;
-Content-type: text/html; charset=euc-jp
+Content-type: text/html; charset=utf-8
 
 <html><head><title>$CONF{title} - $subtitle</title>
 <style>
@@ -239,17 +239,17 @@ sub admin {
 
     login_check();
 
-    print _admin_header("´ÉÍı¥á¥Ë¥å¡¼");
+    print _admin_header("ç®¡ç†ãƒ¡ãƒ‹ãƒ¥ãƒ¼");
     print <<HTML;
 <table border cellpadding=3 cellspacing=0 width=660>
-<tr><th width=140><a href=$CONF{script_name}>´ÉÍı¥â¡¼¥É±ÜÍ÷</a></th>
-<td><span class=smallfont>´ÉÍı¼Ô¥â¡¼¥É¤Ç·Ç¼¨ÈÄ¤ò±ÜÍ÷¤¹¤ë¤³¤È¤¬¤Ç¤­¤Ş¤¹¡£</span></td></tr>
-<tr><th><a href=$CONF{script_name}?chpasswd>¥Ñ¥¹¥ï¡¼¥ÉÊÑ¹¹</a></th>
-<td><span class=smallfont>´ÉÍı¿ÍÍÑ¥Ñ¥¹¥ï¡¼¥É¤ÎÊÑ¹¹¤¬¤Ç¤­¤Ş¤¹¡£</span></td></tr>
-<tr><th><a href=$CONF{script_name}?setup>´Ä¶­ÀßÄê</a></th>
-<td><span class=smallfont>¤³¤Î¥·¥¹¥Æ¥à¤Î½ôÀßÄê¤òÊÑ¹¹¤Ç¤­¤Ş¤¹¡£ÀßÄê¥Ç¡¼¥¿¤Ï´Ä¶­ÀßÄê¥Õ¥¡¥¤¥ë¤Ë½ñ¤­¹ş¤Ş¤ì¤Ş¤¹¡£</span></td></tr>
-<tr><th><a href=$CONF{script_name}?logout>¥í¥°¥¢¥¦¥È</a></th>
-<td><span class=smallfont>¥¯¥Ã¥­¡¼¥Ç¡¼¥¿¤ò¾Ãµî¤·¡¢¥í¥°¥¢¥¦¥È¤·¤Ş¤¹¡£</span></td></tr>
+<tr><th width=140><a href=$CONF{script_name}>ç®¡ç†ãƒ¢ãƒ¼ãƒ‰é–²è¦§</a></th>
+<td><span class=smallfont>ç®¡ç†è€…ãƒ¢ãƒ¼ãƒ‰ã§æ²ç¤ºæ¿ã‚’é–²è¦§ã™ã‚‹ã“ã¨ãŒã§ãã¾ã™ã€‚</span></td></tr>
+<tr><th><a href=$CONF{script_name}?chpasswd>ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰å¤‰æ›´</a></th>
+<td><span class=smallfont>ç®¡ç†äººç”¨ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã®å¤‰æ›´ãŒã§ãã¾ã™ã€‚</span></td></tr>
+<tr><th><a href=$CONF{script_name}?setup>ç’°å¢ƒè¨­å®š</a></th>
+<td><span class=smallfont>ã“ã®ã‚·ã‚¹ãƒ†ãƒ ã®è«¸è¨­å®šã‚’å¤‰æ›´ã§ãã¾ã™ã€‚è¨­å®šãƒ‡ãƒ¼ã‚¿ã¯ç’°å¢ƒè¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ã«æ›¸ãè¾¼ã¾ã‚Œã¾ã™ã€‚</span></td></tr>
+<tr><th><a href=$CONF{script_name}?logout>ãƒ­ã‚°ã‚¢ã‚¦ãƒˆ</a></th>
+<td><span class=smallfont>ã‚¯ãƒƒã‚­ãƒ¼ãƒ‡ãƒ¼ã‚¿ã‚’æ¶ˆå»ã—ã€ãƒ­ã‚°ã‚¢ã‚¦ãƒˆã—ã¾ã™ã€‚</span></td></tr>
 </table>
 HTML
     print _footer();
@@ -266,7 +266,7 @@ sub admin_str {
     if ($admin_passwd ne '') {
         return <<STR;
 <table border=0 cellpadding=0 cellspacing=0 bgcolor=#ddddaa>
-<tr><td>[´ÉÍı¥â¡¼¥É]¡¡¡¡<a href=$CONF{script_name}?admin>´ÉÍı¥á¥Ë¥å¡¼¤Ø</a></td></tr>
+<tr><td>[ç®¡ç†ãƒ¢ãƒ¼ãƒ‰]ã€€ã€€<a href=$CONF{script_name}?admin>ç®¡ç†ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã¸</a></td></tr>
 </table>
 STR
 
@@ -315,7 +315,7 @@ sub base64_decode {
 
     $str =~ tr|A-Za-z0-9+=/||cd;
     if (length($str) % 4) {
-        error("¥Ç¥³¡¼¥ÉÂĞ¾İ¤ÎÊ¸»úÎó¤¬ÉÔÀµ¤Ç¤¹¡£: $str");
+        error("ãƒ‡ã‚³ãƒ¼ãƒ‰å¯¾è±¡ã®æ–‡å­—åˆ—ãŒä¸æ­£ã§ã™ã€‚: $str");
     }
     $str =~ s/=+$//;
     $str =~ tr|A-Za-z0-9+/| -_|;
@@ -330,20 +330,20 @@ sub chpasswd {
 
     login_check();
 
-    print _admin_header("¥Ñ¥¹¥ï¡¼¥ÉÊÑ¹¹");
+    print _admin_header("ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰å¤‰æ›´");
     print <<HTML;
-<a href=$CONF{script_name}?admin><b>´ÉÍı¥á¥Ë¥å¡¼¤Ø</b></a><p>
+<a href=$CONF{script_name}?admin><b>ç®¡ç†ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã¸</b></a><p>
 <form action=$CONF{script_name} method=post>
-´ÉÍıÍÑ¥Ñ¥¹¥ï¡¼¥É¤òÊÑ¹¹¤·¤Ş¤¹¡£ÊÑ¹¹¤·¤¿¤¤¥Ñ¥¹¥ï¡¼¥É¤òÆşÎÏ¤·¤Æ¤¯¤À¤µ¤¤¡£<br>
-¥Ñ¥¹¥ï¡¼¥É¤ÏÈ¾³Ñ±Ñ¿ô»ú8Ê¸»ú°ÊÆâ¤Ç»ØÄê¤·¤Æ¤¯¤À¤µ¤¤¡£<p>
+ç®¡ç†ç”¨ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã‚’å¤‰æ›´ã—ã¾ã™ã€‚å¤‰æ›´ã—ãŸã„ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚<br>
+ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã¯åŠè§’è‹±æ•°å­—8æ–‡å­—ä»¥å†…ã§æŒ‡å®šã—ã¦ãã ã•ã„ã€‚<p>
 
 <input type=password name=new_passwd size=13 style="ime-mode:inactive;"><p>
 
-³ÎÇ§¤Î¤¿¤á¡¢¤â¤¦°ìÅÙÆşÎÏ¤·¤Æ¤¯¤À¤µ¤¤¡£<p>
+ç¢ºèªã®ãŸã‚ã€ã‚‚ã†ä¸€åº¦å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚<p>
 
 <input type=password name=new_passwd_again size=13 style="ime-mode:inactive;"><p>
 
-<input type=submit name=chpasswd2 value="¥Ñ¥¹¥ï¡¼¥É¤òÊÑ¹¹¤¹¤ë">
+<input type=submit name=chpasswd2 value="ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã‚’å¤‰æ›´ã™ã‚‹">
 </form>
 </ul>
 HTML
@@ -358,20 +358,20 @@ sub chpasswd2 {
     login_check();
 
     if ($FORM{new_passwd} eq '') {
-        error('¿·¤·¤¤¥Ñ¥¹¥ï¡¼¥É¤¬ÆşÎÏ¤µ¤ì¤Æ¤¤¤Ş¤»¤ó¡£');
+        error('æ–°ã—ã„ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ãŒå…¥åŠ›ã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚');
     }
     if ($FORM{new_passwd} =~ /\W/) {
-        error('¥Ñ¥¹¥ï¡¼¥É¤ÏÈ¾³Ñ±Ñ¿ô»ú¤Î¤ß¤Ç»ØÄê¤·¤Æ¤¯¤À¤µ¤¤¡£');
+        error('ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã¯åŠè§’è‹±æ•°å­—ã®ã¿ã§æŒ‡å®šã—ã¦ãã ã•ã„ã€‚');
     }
     if ($FORM{new_passwd} ne $FORM{new_passwd_again}) {
-        error('ÆşÎÏ¤µ¤ì¤¿2¤Ä¤Î¥Ñ¥¹¥ï¡¼¥É¤¬Æ±°ì¤Ç¤¢¤ê¤Ş¤»¤ó¡£');
+        error('å…¥åŠ›ã•ã‚ŒãŸ2ã¤ã®ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ãŒåŒä¸€ã§ã‚ã‚Šã¾ã›ã‚“ã€‚');
     }
     if (length($FORM{new_passwd}) > 8) {
-        error('¥Ñ¥¹¥ï¡¼¥É¤ÏÈ¾³Ñ±Ñ¿ô»ú8Ê¸»ú°ÊÆâ¤Ç»ØÄê¤·¤Æ¤¯¤À¤µ¤¤¡£');
+        error('ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã¯åŠè§’è‹±æ•°å­—8æ–‡å­—ä»¥å†…ã§æŒ‡å®šã—ã¦ãã ã•ã„ã€‚');
     }
 
     open(W, "> tboard_passwd.cgi")
-     or error("¥Ñ¥¹¥ï¡¼¥É¥Õ¥¡¥¤¥ë¤Ø¤Î½ñ¤­½Ğ¤·¤Ë¼ºÇÔ¤·¤Ş¤·¤¿¡£: $!");
+     or error("ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ãƒ•ã‚¡ã‚¤ãƒ«ã¸ã®æ›¸ãå‡ºã—ã«å¤±æ•—ã—ã¾ã—ãŸã€‚: $!");
     print W crypt_passwd($FORM{new_passwd});
     close(W);
 
@@ -387,7 +387,7 @@ sub cid_required {
 
     if ($CONF{opt_cid}) {
         my $cid = get_cookie("TBOARD_CID")
-         or error("cookie-ID¤¬½ñ¤­¹ş¤á¤Ş¤»¤ó¡£¥Ö¥é¥¦¥¶¤Îcookieµ¡Ç½¤òÍ­¸ú¤Ë¤·¤Æ¤¯¤À¤µ¤¤¡£");
+         or error("cookie-IDãŒæ›¸ãè¾¼ã‚ã¾ã›ã‚“ã€‚ãƒ–ãƒ©ã‚¦ã‚¶ã®cookieæ©Ÿèƒ½ã‚’æœ‰åŠ¹ã«ã—ã¦ãã ã•ã„ã€‚");
         return $cid;
     }
 
@@ -395,25 +395,25 @@ sub cid_required {
 
 sub com {
 
-    # ¥¨¥é¡¼¥á¥Ã¥»¡¼¥¸¤¬¤¢¤ë¾ì¹ç¤Ï%FORM¤ÎÃÍ¤òÍ¥Àè¤¹¤ë
+    # ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãŒã‚ã‚‹å ´åˆã¯%FORMã®å€¤ã‚’å„ªå…ˆã™ã‚‹
     my $error_ref = shift;
     my %data;
     my $errmsg;
     if ($error_ref) {
         $errmsg = join("", map { "<li>$_\n" } @$error_ref);
     }
-    # ¥¯¥Ã¥­¡¼¥Ç¡¼¥¿/¥»¥Ã¥·¥ç¥ó¥Ç¡¼¥¿¤ò¥í¡¼¥É
+    # ã‚¯ãƒƒã‚­ãƒ¼ãƒ‡ãƒ¼ã‚¿/ã‚»ãƒƒã‚·ãƒ§ãƒ³ãƒ‡ãƒ¼ã‚¿ã‚’ãƒ­ãƒ¼ãƒ‰
     %data = cookie_data_decode(get_cookie('TBOARD'));
     if ($FORM{sid}) {
         %data = (%data, session_data("get", $FORM{sid}));
         $FORM{pno} = $data{pno};
     } elsif ($FORM{msgno}) {
         my $p = table_select("tboard_message.cgi","msgno=$FORM{msgno}");
-        $p->{msgno} or error("³ºÅö¤¹¤ëÈ¯¸À¥Ç¡¼¥¿¤¬¤¢¤ê¤Ş¤»¤ó¤Ç¤·¤¿¡£");
+        $p->{msgno} or error("è©²å½“ã™ã‚‹ç™ºè¨€ãƒ‡ãƒ¼ã‚¿ãŒã‚ã‚Šã¾ã›ã‚“ã§ã—ãŸã€‚");
         %data = (%data, %$p);
         $data{msgno} = $FORM{msgno};
     }
-    # cookie-ID¥Á¥§¥Ã¥¯
+    # cookie-IDãƒã‚§ãƒƒã‚¯
     $data{cid} = cid_required() if $CONF{opt_cid};
 
     $data{url} ||= 'http://';
@@ -424,7 +424,7 @@ sub com {
     my $com_type;
     if ($FORM{pno}) {
         my $p = table_select("tboard_message.cgi","msgno=$FORM{pno}");
-        $p->{msgno} or error("³ºÅö¤¹¤ëÈ¯¸À¥Ç¡¼¥¿¤¬¤¢¤ê¤Ş¤»¤ó¤Ç¤·¤¿¡£");
+        $p->{msgno} or error("è©²å½“ã™ã‚‹ç™ºè¨€ãƒ‡ãƒ¼ã‚¿ãŒã‚ã‚Šã¾ã›ã‚“ã§ã—ãŸã€‚");
         if (!$FORM{sid}) {
             $p->{message} =~ s/\n/\n> /g;
             $data{message} = "> $p->{message}";
@@ -442,13 +442,13 @@ sub com {
             $data{sid} = $FORM{sid} = gen_sid();
             session_data("set", $data{sid}, \%data);
         }
-        $com_type = qq{No.$p->{msgno}¡Ö$p->{subject}¡×(Åê¹Æ¼Ô¡§$p->{name})}.
-         qq{¤Ø¤ÎÊÖ¿®};
+        $com_type = qq{No.$p->{msgno}ã€Œ$p->{subject}ã€(æŠ•ç¨¿è€…ï¼š$p->{name})}.
+         qq{ã¸ã®è¿”ä¿¡};
     } else {
-        $com_type = qq{¿·µ¬Åê¹Æ};
+        $com_type = qq{æ–°è¦æŠ•ç¨¿};
     }
     if ($FORM{msgno}) {
-        $com_type = "Åê¹ÆºÑ¤ßµ­»ö¤Î½¤Àµ";
+        $com_type = "æŠ•ç¨¿æ¸ˆã¿è¨˜äº‹ã®ä¿®æ­£";
     }
 
     my $htmlstr = _form_html($FORM{msgno});
@@ -479,8 +479,8 @@ sub com {
     $htmlstr =~ s/##errmsg##/$errmsg/g;
     $htmlstr =~ s/##([^#]+)##/$data{$1}/g;
 
-    my $com_mod = $FORM{msgno} ? "½¤Àµ" : "Åê¹Æ";
-    print _header("$com_mod¥Õ¥©¡¼¥à");
+    my $com_mod = $FORM{msgno} ? "ä¿®æ­£" : "æŠ•ç¨¿";
+    print _header("$com_modãƒ•ã‚©ãƒ¼ãƒ ");
     print $htmlstr;
     print _footer();
     exit;
@@ -491,7 +491,7 @@ sub com_cancel {
 
     ($FORM{sid}) = $FORM{sid} =~ /^(\w+)$/;
     unlink("temp/$FORM{sid}") if -e "temp/$FORM{sid}";
-    tempfile_clean(); # °ìÄê»ş´Ö·Ğ²á¤·¤¿°ì»ş¥Õ¥¡¥¤¥ë¤òºï½ü
+    tempfile_clean(); # ä¸€å®šæ™‚é–“çµŒéã—ãŸä¸€æ™‚ãƒ•ã‚¡ã‚¤ãƒ«ã‚’å‰Šé™¤
 
     print "Location: $CONF{script_name}?", join("&", map { "$_=".uri_escape($FORM{$_}) } grep { $FORM{$_} ne "" } qw(p t o str cond tno)), "\n\n";
     exit;
@@ -512,34 +512,34 @@ sub com_confirm {
     my @msg = com_input_check();
     com(\@msg) if @msg;
 
-    # cookie-ID¥Á¥§¥Ã¥¯
+    # cookie-IDãƒã‚§ãƒƒã‚¯
     $FORM{cid} = cid_required() if $CONF{opt_cid};
 
     my $com_type;
     if ($FORM{pno}) {
         my $p = table_select("tboard_message.cgi","msgno=$FORM{pno}");
-        $p->{msgno} or error("³ºÅö¤¹¤ëÈ¯¸À¥Ç¡¼¥¿¤¬¤¢¤ê¤Ş¤»¤ó¤Ç¤·¤¿¡£");
-        $com_type = qq{No.$p->{msgno}¡Ö$p->{subject}¡×(Åê¹Æ¼Ô¡§$p->{name})}.
-         qq{¤Ø¤ÎÊÖ¿®};
+        $p->{msgno} or error("è©²å½“ã™ã‚‹ç™ºè¨€ãƒ‡ãƒ¼ã‚¿ãŒã‚ã‚Šã¾ã›ã‚“ã§ã—ãŸã€‚");
+        $com_type = qq{No.$p->{msgno}ã€Œ$p->{subject}ã€(æŠ•ç¨¿è€…ï¼š$p->{name})}.
+         qq{ã¸ã®è¿”ä¿¡};
     } elsif ($FORM{msgno}) {
-        $com_type = qq{Åê¹ÆºÑ¤ßµ­»ö¤Î½¤Àµ};
+        $com_type = qq{æŠ•ç¨¿æ¸ˆã¿è¨˜äº‹ã®ä¿®æ­£};
     } else {
-        $com_type = qq{¿·µ¬Åê¹Æ};
+        $com_type = qq{æ–°è¦æŠ•ç¨¿};
     }
 
 
-    my $com_mod = $FORM{msgno} ? "½¤Àµ" : "Åê¹Æ";
-    print _header("$com_modÆâÍÆ¤Î³ÎÇ§");
-    print "<span style=line-height:180%><br>¢¡$com_type</span>";
+    my $com_mod = $FORM{msgno} ? "ä¿®æ­£" : "æŠ•ç¨¿";
+    print _header("$com_modå†…å®¹ã®ç¢ºèª");
+    print "<span style=line-height:180%><br>â—†$com_type</span>";
     print mk_shousai_html();
     print <<HTML;
-<br>°Ê¾å¤ÎÆâÍÆ¤Ç¤è¤í¤·¤±¤ì¤Ğ¡Ö$com_mod¤¹¤ë¡×¥Ü¥¿¥ó¤ò²¡¤·¤Æ¤¯¤À¤µ¤¤¡£<p>
+<br>ä»¥ä¸Šã®å†…å®¹ã§ã‚ˆã‚ã—ã‘ã‚Œã°ã€Œ$com_modã™ã‚‹ã€ãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ã¦ãã ã•ã„ã€‚<p>
 
 <input type=hidden name=sid value="$FORM{sid}">
 <input type=hidden name=msgno value="$FORM{msgno}">
-<input type=submit name=com_done value="$com_mod¤¹¤ë" style=background-color:$CONF{body_bgcolor};border:solid;border-width:1px;border-color:$CONF{body_text};>
-<input type=submit name=com value="Ìá¤Ã¤ÆºÆÊÔ½¸¤¹¤ë" style=background-color:$CONF{body_bgcolor};border:solid;border-width:1px;border-color:$CONF{body_text};>
-<input type=button value="$com_modÃæ»ß" style=background-color:$CONF{body_bgcolor};border:solid;border-width:1px;border-color:$CONF{body_text}; onclick="if(confirm('ÊÔ½¸ÅÓÃæ¤Î¥Ç¡¼¥¿¤òÇË´ş¤·¤Æ$com_mod¤òÃæ»ß¤·¤Ş¤¹¤«?')){location.href='$CONF{script_name}?com_cancel&sid=$FORM{sid}'}">
+<input type=submit name=com_done value="$com_modã™ã‚‹" style=background-color:$CONF{body_bgcolor};border:solid;border-width:1px;border-color:$CONF{body_text};>
+<input type=submit name=com value="æˆ»ã£ã¦å†ç·¨é›†ã™ã‚‹" style=background-color:$CONF{body_bgcolor};border:solid;border-width:1px;border-color:$CONF{body_text};>
+<input type=button value="$com_modä¸­æ­¢" style=background-color:$CONF{body_bgcolor};border:solid;border-width:1px;border-color:$CONF{body_text}; onclick="if(confirm('ç·¨é›†é€”ä¸­ã®ãƒ‡ãƒ¼ã‚¿ã‚’ç ´æ£„ã—ã¦$com_modã‚’ä¸­æ­¢ã—ã¾ã™ã‹?')){location.href='$CONF{script_name}?com_cancel&sid=$FORM{sid}'}">
 HTML
     print _footer();
     exit;
@@ -552,10 +552,10 @@ sub com_done {
     my @msg = com_input_check();
     com(\@msg) if @msg;
 
-    # ¥»¥Ã¥·¥ç¥ó¥Ç¡¼¥¿¤Î¥í¡¼¥É
+    # ã‚»ãƒƒã‚·ãƒ§ãƒ³ãƒ‡ãƒ¼ã‚¿ã®ãƒ­ãƒ¼ãƒ‰
     %FORM = (%FORM, session_data("get", $FORM{sid}));
 
-    # cookie-ID¥Á¥§¥Ã¥¯
+    # cookie-IDãƒã‚§ãƒƒã‚¯
     $FORM{cid} = cid_required() if $CONF{opt_cid};
 
     $LOCKED = file_lock();
@@ -563,13 +563,13 @@ sub com_done {
     $FORM{remote_host} ||= remote_host();
     $FORM{user_agent} ||= $ENV{HTTP_USER_AGENT};
 
-    ### $msgno¤ÎÃÍ¤¬¤¢¤ë¤È¤­¤Ï½¤Àµ
+    ### $msgnoã®å€¤ãŒã‚ã‚‹ã¨ãã¯ä¿®æ­£
     my $msgno = $FORM{msgno};
     my $notify;
     if ($msgno) {
         my $p = table_select("tboard_message.cgi","msgno=$msgno");
         $p->{msgno}
-         or error("»ØÄê¤µ¤ì¤¿Åê¹Æµ­»öÈÖ¹æ¤Ï¤¢¤ê¤Ş¤»¤ó¡£: msgno=$msgno");
+         or error("æŒ‡å®šã•ã‚ŒãŸæŠ•ç¨¿è¨˜äº‹ç•ªå·ã¯ã‚ã‚Šã¾ã›ã‚“ã€‚: msgno=$msgno");
         foreach my $key(qw(tno pno indent stat reg_date userid)) {
             $FORM{$key} = $p->{$key}
         }
@@ -581,7 +581,7 @@ sub com_done {
         $FORM{msgno} ||= get_new_msgno();
         if ($FORM{pno}) {
             my $p = table_select("tboard_message.cgi","msgno=$FORM{pno}");
-            error("³ºÅö¤¹¤ëÊÖ¿®¸µµ­»ö¥Ç¡¼¥¿(msgno=$FORM{pno})¤¬¤¢¤ê¤Ş¤»¤ó¡£")
+            error("è©²å½“ã™ã‚‹è¿”ä¿¡å…ƒè¨˜äº‹ãƒ‡ãƒ¼ã‚¿(msgno=$FORM{pno})ãŒã‚ã‚Šã¾ã›ã‚“ã€‚")
              unless $p->{msgno};
             $notify = $p if $p->{notify};
             $FORM{indent} = $p->{indent} + 1;
@@ -606,14 +606,14 @@ sub com_done {
 
     ($FORM{sid}) = $FORM{sid} =~ /^(\w+)$/;
     unlink("temp/$FORM{sid}") if -e "temp/$FORM{sid}";
-    tempfile_clean(); # °ìÄê»ş´Ö·Ğ²á¤·¤¿°ì»ş¥Õ¥¡¥¤¥ë¤òºï½ü
+    tempfile_clean(); # ä¸€å®šæ™‚é–“çµŒéã—ãŸä¸€æ™‚ãƒ•ã‚¡ã‚¤ãƒ«ã‚’å‰Šé™¤
 
     if (!$msgno and $notify) {
         my $mailstr = <<STR;
-No.$notify->{msgno}¡Ö$notify->{subject}¡×(Åê¹Æ¼Ô¡§$notify->{name})
-¤ÎÅê¹Æ¤ËÂĞ¤·¤Æ°Ê²¼¤ÎÊÖ¿®¤¬ÉÕ¤­¤Ş¤·¤¿¤Î¤ÇÄÌÃÎ¤·¤Ş¤¹¡£
+No.$notify->{msgno}ã€Œ$notify->{subject}ã€(æŠ•ç¨¿è€…ï¼š$notify->{name})
+ã®æŠ•ç¨¿ã«å¯¾ã—ã¦ä»¥ä¸‹ã®è¿”ä¿¡ãŒä»˜ãã¾ã—ãŸã®ã§é€šçŸ¥ã—ã¾ã™ã€‚
 
-No.$FORM{msgno}¡Ö$FORM{subject}¡×(Åê¹Æ¼Ô¡§$FORM{name})
+No.$FORM{msgno}ã€Œ$FORM{subject}ã€(æŠ•ç¨¿è€…ï¼š$FORM{name})
 $CONF{script_url}?view2=$FORM{msgno}
 
 ---------------------
@@ -621,7 +621,7 @@ $CONF{prod_name} v$CONF{version}
 $CONF{a_url}
 STR
         sendmail($notify->{email},$CONF{k_email},
-         qq{$CONF{title} ÊÖ¿®ÄÌÃÎ},$mailstr);
+         qq{$CONF{title} è¿”ä¿¡é€šçŸ¥},$mailstr);
     }
 
     set_cookie('TBOARD', 30, cookie_data_encode(@{$CONF{cookie_fields}}));
@@ -635,15 +635,15 @@ sub com_input_check {
     my %data = session_data("get", $FORM{sid});
 
     my @msg;
-    $data{name} or push(@msg,'Åê¹Æ¼ÔÌ¾¤òÆşÎÏ¤·¤Æ¤¯¤À¤µ¤¤¡£');
-    $data{message} or push(@msg,'ËÜÊ¸¤òÆşÎÏ¤·¤Æ¤¯¤À¤µ¤¤¡£');
-    $data{passwd} or push(@msg,'¹¹¿·/ºï½üÍÑ¥Ñ¥¹¥ï¡¼¥É¤òÆşÎÏ¤·¤Æ¤¯¤À¤µ¤¤¡£');
+    $data{name} or push(@msg,'æŠ•ç¨¿è€…åã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚');
+    $data{message} or push(@msg,'æœ¬æ–‡ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚');
+    $data{passwd} or push(@msg,'æ›´æ–°/å‰Šé™¤ç”¨ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚');
     my $email_reqiured = $data{email_mode} ? 1 : 0;
     $email_reqiured = 1 if $data{notify};
     my @msg_;
     ($data{email}, @msg_) = email_chk($data{email},required=>$email_reqiured);
     push(@msg, @msg_) if @msg_;
-    $data{subject} ||= '(ÌµÂê)';
+    $data{subject} ||= '(ç„¡é¡Œ)';
     @msg;
 
 }
@@ -664,7 +664,7 @@ sub cookie_data_decode {
 sub cookie_mod {
 
     my %data = cookie_data_decode(get_cookie('TBOARD'));
-    # cookie-ID¥Á¥§¥Ã¥¯
+    # cookie-IDãƒã‚§ãƒƒã‚¯
     $data{cid} = cid_required() if $CONF{opt_cid};
 
     $data{email_mode} = 1 if $data{email_mode} eq '';
@@ -695,7 +695,7 @@ sub cookie_mod {
     }
     $htmlstr =~ s/##([^#]+)##/html_output_escape($data{$1})/eg;
 
-    print _header("¸Ä¿ÍÀßÄê");
+    print _header("å€‹äººè¨­å®š");
     print $htmlstr;
     print _footer();
     exit;
@@ -756,7 +756,6 @@ sub decoding {
     if ($q) {
         foreach my $name($q->param()) {
             foreach my $each($q->param($name)) {
-#                jcode::convert(\$each,'sjis');
                 if (defined($FORM{$name})) {
                     $FORM{$name} = join('|||', $FORM{$name}, $each);
                 } else {
@@ -788,7 +787,6 @@ sub decoding {
             $name  =~ s/%([a-fA-F0-9][a-fA-F0-9])/pack("C", hex($1))/eg;
             $value =~ s/%([a-fA-F0-9][a-fA-F0-9])/pack("C", hex($1))/eg;
             $value =~ s/\r//g;
-#            jcode::convert(\$value, 'sjis');
 
             if (defined($FORM{$name})) {
                 $FORM{$name} = join('|||', $FORM{$name}, $value);
@@ -813,22 +811,22 @@ sub del {
 
 sub del_confirm {
 
-    $FORM{msgno} or error("Åê¹ÆÈÖ¹æ¤¬»ØÄê¤µ¤ì¤Æ¤¤¤Ş¤»¤ó¡£");
-    $FORM{passwd} or error("ºï½üÍÑ¥Ñ¥¹¥ï¡¼¥É¤òÆşÎÏ¤·¤Æ¤¯¤À¤µ¤¤¡£");
+    $FORM{msgno} or error("æŠ•ç¨¿ç•ªå·ãŒæŒ‡å®šã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚");
+    $FORM{passwd} or error("å‰Šé™¤ç”¨ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚");
  
     my $p = table_select("tboard_message.cgi","msgno=$FORM{msgno}");
-    $p->{msgno} or error("³ºÅö¤¹¤ëÅê¹Æ¥Ç¡¼¥¿(msgno=$FORM{msgno})¤ÏÂ¸ºß¤·¤Ş¤»¤ó¤Ç¤·¤¿¡£");
+    $p->{msgno} or error("è©²å½“ã™ã‚‹æŠ•ç¨¿ãƒ‡ãƒ¼ã‚¿(msgno=$FORM{msgno})ã¯å­˜åœ¨ã—ã¾ã›ã‚“ã§ã—ãŸã€‚");
     if ($p->{passwd} ne $FORM{passwd}) {
-        error('¥Ñ¥¹¥ï¡¼¥É¤¬°ã¤¤¤Ş¤¹¡£');
+        error('ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ãŒé•ã„ã¾ã™ã€‚');
     }
 
-    ### É½¼¨¤ÏÌ¤¼ÂÁõ
+    ### è¡¨ç¤ºã¯æœªå®Ÿè£…
     my $format;
     $format =~ s/##([^#]+)##/$p->{$1}/g;
 
-    print _header("Åê¹Æ¥Ç¡¼¥¿¤Îºï½ü");
+    print _header("æŠ•ç¨¿ãƒ‡ãƒ¼ã‚¿ã®å‰Šé™¤");
     print <<HTML;
-°Ê²¼¤ÎÅê¹Æ¥Ç¡¼¥¿¤òºï½ü¤·¤Æ¤è¤¤¾ì¹ç¤Ï¡Öºï½ü¡×¥Ü¥¿¥ó¤ò²¡¤·¤Æ¤¯¤À¤µ¤¤¡£<p>
+ä»¥ä¸‹ã®æŠ•ç¨¿ãƒ‡ãƒ¼ã‚¿ã‚’å‰Šé™¤ã—ã¦ã‚ˆã„å ´åˆã¯ã€Œå‰Šé™¤ã€ãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ã¦ãã ã•ã„ã€‚<p>
 
 <form>
 $format<hr noshade size=4>
@@ -838,8 +836,8 @@ $format<hr noshade size=4>
 <input type=hidden name=p value=$FORM{p}>
 <input type=hidden name=msgno value="$FORM{msgno}">
 <input type=hidden name=passwd value="$FORM{passwd}">
-<input type=submit value=ºï½ü¤¹¤ë>
-<input type=button value=Ìá¡¡¤ë onclick=history.back()>
+<input type=submit value=å‰Šé™¤ã™ã‚‹>
+<input type=button value=æˆ»ã€€ã‚‹ onclick=history.back()>
 HTML
     print _footer();
     exit;
@@ -863,20 +861,20 @@ sub del_tree {
 sub email_chk {
 
     my($email, %opt) = @_;
-    $opt{str} ||= "¥á¡¼¥ë¥¢¥É¥ì¥¹";
+    $opt{str} ||= "ãƒ¡ãƒ¼ãƒ«ã‚¢ãƒ‰ãƒ¬ã‚¹";
     my @msg;
 
     if ($opt{required}) {
-        $email or push(@msg, $opt{str}.'¤òÆşÎÏ¤·¤Æ¤¯¤À¤µ¤¤¡£');
+        $email or push(@msg, $opt{str}.'ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚');
     }
     if ($email =~ /[\0-,\/\:\;<-?\[-\^\`\{-\~]/) {
-        push(@msg, $opt{str}.'¤ËÆÃ¼ìÊ¸»ú¤Ï»ÈÍÑ¤Ç¤­¤Ş¤»¤ó¡£');
+        push(@msg, $opt{str}.'ã«ç‰¹æ®Šæ–‡å­—ã¯ä½¿ç”¨ã§ãã¾ã›ã‚“ã€‚');
     }
     if ($email =~ /[^ -\~]/) {
-        push(@msg, $opt{str}.'¤ËÁ´³ÑÊ¸»ú¤Ï»ÈÍÑ¤Ç¤­¤Ş¤»¤ó¡£');
+        push(@msg, $opt{str}.'ã«å…¨è§’æ–‡å­—ã¯ä½¿ç”¨ã§ãã¾ã›ã‚“ã€‚');
     }
     if ($email && $email !~ /^[-_.!*a-zA-Z0-9\/&+%\#]+\@[-_.a-zA-Z0-9]+\.(?:[a-zA-Z]{2,3})$/) {
-        push(@msg, $opt{str}.'¤¬Àµ¤·¤¯¤¢¤ê¤Ş¤»¤ó¡£');
+        push(@msg, $opt{str}.'ãŒæ­£ã—ãã‚ã‚Šã¾ã›ã‚“ã€‚');
     }
 
     return wantarray ? (lc($email), @msg) : lc($email);
@@ -900,7 +898,7 @@ sub enc_b64 {
 
 sub error {
 
-    print _header("¥¨¥é¡¼");
+    print _header("ã‚¨ãƒ©ãƒ¼");
     print "<ul>";
     print map { "<li>$_\n" } @_;
     print "</ul>\n";
@@ -912,7 +910,7 @@ sub error {
 sub file_lock {
 
     open(LOCK, "data/lockfile")
-     or error("¥í¥Ã¥¯ÍÑ¥Õ¥¡¥¤¥ë¤¬³«¤±¤Ş¤»¤ó¤Ç¤·¤¿¡£: $!");
+     or error("ãƒ­ãƒƒã‚¯ç”¨ãƒ•ã‚¡ã‚¤ãƒ«ãŒé–‹ã‘ã¾ã›ã‚“ã§ã—ãŸã€‚: $!");
     flock(LOCK, 2);
     1;
 
@@ -928,12 +926,12 @@ sub file_save {
     $filename =~ s#.*[\\/]([^\\/]+)$#$1# if $filename =~ m#[^\\/]#;
     my($ext) = $filename =~ /\.([^\.]+)$/;
     unless ($extlist{lc($ext)}) {
-        error("¥¢¥Ã¥×¥í¡¼¥É¤Ç¤­¤ë¥Õ¥¡¥¤¥ë¤Ï¡¢".
+        error("ã‚¢ãƒƒãƒ—ãƒ­ãƒ¼ãƒ‰ã§ãã‚‹ãƒ•ã‚¡ã‚¤ãƒ«ã¯ã€".
          join(" ", sort keys %extlist).
-         " ¤Î³ÈÄ¥»Ò¤ò»ı¤Ä¤â¤Î¤Ë¸Â¤é¤ì¤Æ¤¤¤Ş¤¹¡£: $filename");
+         " ã®æ‹¡å¼µå­ã‚’æŒã¤ã‚‚ã®ã«é™ã‚‰ã‚Œã¦ã„ã¾ã™ã€‚: $filename");
     }
     open(W, "> $filepath/$filename")
-     or error("$filepath/$filename ¤Î½ñ¤­¹ş¤ß¤Ë¼ºÇÔ¤·¤Ş¤·¤¿¡£: $!");
+     or error("$filepath/$filename ã®æ›¸ãè¾¼ã¿ã«å¤±æ•—ã—ã¾ã—ãŸã€‚: $!");
     print W $stream;
     close(W);
 
@@ -957,7 +955,7 @@ sub get_comform_str {
     my @admin_color = get_cookie('TBOARD_ADMIN') ? split(/\s+/, $CONF{admin_color}) : ();
     foreach my $f(qw(sex pref age)) {
         foreach (split(/\s+/, $CONF{"${f}str"})) {
-            if ($f eq 'age' and !/\D/) { $_ .= 'ºÍ'; }
+            if ($f eq 'age' and !/\D/) { $_ .= 'æ‰'; }
             my $selected = $_ eq $data{$f} ? "selected" : "";
             $str{$f} .= qq{<option value=$_ $selected>$_\n};
         }
@@ -967,12 +965,12 @@ sub get_comform_str {
     $data{message_color} ||= $color[0];
     foreach (@color, @admin_color) {
         my $checked = $_ eq $data{subject_color} ? "checked" : "";
-        $str{subject_color} .= qq{<input type=radio name=subject_color value=$_ $checked><font color="$_">¢£</font>\n};
+        $str{subject_color} .= qq{<input type=radio name=subject_color value=$_ $checked><font color="$_">â– </font>\n};
         $checked = $_ eq $data{message_color} ? "checked" : "";
-        $str{message_color} .= qq{<input type=radio name=message_color value=$_ $checked><font color="$_">¢£</font>\n};
+        $str{message_color} .= qq{<input type=radio name=message_color value=$_ $checked><font color="$_">â– </font>\n};
         if ($i == $#color and get_cookie('TBOARD_ADMIN') and @admin_color) {
-            $str{subject_color} .= q{¡¡ [´ÉÍı¼ÔÀìÍÑ¿§¡§};
-            $str{message_color} .= q{¡¡ [´ÉÍı¼ÔÀìÍÑ¿§¡§};
+            $str{subject_color} .= q{ã€€ [ç®¡ç†è€…å°‚ç”¨è‰²ï¼š};
+            $str{message_color} .= q{ã€€ [ç®¡ç†è€…å°‚ç”¨è‰²ï¼š};
         }
         $i++;
     }
@@ -995,7 +993,7 @@ sub get_cookie {
 
     my($cookie_name) = @_;
     my $cookie_data;
-    error('¥¯¥Ã¥­¡¼Ì¾¤ò»ØÄê¤·¤Æ¤¯¤À¤µ¤¤¡£') if !$cookie_name;
+    error('ã‚¯ãƒƒã‚­ãƒ¼åã‚’æŒ‡å®šã—ã¦ãã ã•ã„ã€‚') if !$cookie_name;
     foreach (split(/; /, $ENV{HTTP_COOKIE})) {
         my($name, $value) = split(/=/);
         if ($name eq $cookie_name) {
@@ -1042,7 +1040,7 @@ sub get_datetime_for_sendmail {
 sub get_hour_diff {
 
     eval { use Time::Local; };
-    error("Time::Local¥â¥¸¥å¡¼¥ë¤¬¥í¡¼¥É¤Ç¤­¤Ş¤»¤ó¡£: $@") if $@;
+    error("Time::Localãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ãŒãƒ­ãƒ¼ãƒ‰ã§ãã¾ã›ã‚“ã€‚: $@") if $@;
     my $date = shift;
     my($year,$mon,$day,$hour,$min,$sec) = split(/\D+/, $date);
     my $time = timelocal($sec,$min,$hour,$day,$mon-1,$year-1900);
@@ -1056,10 +1054,10 @@ sub get_new_msgno {
 
     $LOCKED = file_lock() unless $LOCKED;
     open(R, "data/tboard_msgno.cgi")
-     or error("Åê¹ÆÈÖ¹æ¥Ç¡¼¥¿¥Õ¥¡¥¤¥ë¤¬³«¤±¤Ş¤»¤ó¤Ç¤·¤¿¡£: $!");
+     or error("æŠ•ç¨¿ç•ªå·ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«ãŒé–‹ã‘ã¾ã›ã‚“ã§ã—ãŸã€‚: $!");
     my $msgno = <R>;
     open(W, ">data/tboard_msgno.cgi")
-     or error("Åê¹ÆÈÖ¹æ¥Ç¡¼¥¿¥Õ¥¡¥¤¥ë¤Ø½ñ¤­¹ş¤ß¤Ç¤­¤Ş¤»¤ó¤Ç¤·¤¿¡£: $!");
+     or error("æŠ•ç¨¿ç•ªå·ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«ã¸æ›¸ãè¾¼ã¿ã§ãã¾ã›ã‚“ã§ã—ãŸã€‚: $!");
     print W ++$msgno;
     close(W);
     return $msgno;
@@ -1085,7 +1083,7 @@ sub init_passwd_file {
 
     unless (-e $file) {
         open(W, "> $file")
-         or error("¥Ñ¥¹¥ï¡¼¥É¥Õ¥¡¥¤¥ë($file)¤ÎºîÀ®¤Ë¼ºÇÔ¤·¤Ş¤·¤¿¡£$CONF{message_permission}");
+         or error("ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ãƒ•ã‚¡ã‚¤ãƒ«($file)ã®ä½œæˆã«å¤±æ•—ã—ã¾ã—ãŸã€‚$CONF{message_permission}");
         print W crypt_passwd("12345");
         close(W);
     }
@@ -1095,8 +1093,8 @@ sub init_passwd_file {
 
 sub init_setup {
 
-    ### tboard_conf.pl ¤¬Â¸ºß¤·¤Ê¤¤¾ì¹ç¡¢½é²óµ¯Æ°¤È¸«¤Ê¤¹¡£
-    ### ¥Ñ¥¹¥ï¡¼¥ÉÀßÄê¥Õ¥©¡¼¥à¤ËÍ¶Æ³¤¹¤ë¡£
+    ### tboard_conf.pl ãŒå­˜åœ¨ã—ãªã„å ´åˆã€åˆå›èµ·å‹•ã¨è¦‹ãªã™ã€‚
+    ### ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰è¨­å®šãƒ•ã‚©ãƒ¼ãƒ ã«èª˜å°ã™ã‚‹ã€‚
 
 #    %CONF = (%CONF, set_default(\%CONF));
 #    %CONF = (%CONF, set_default_init(\%CONF));
@@ -1106,42 +1104,42 @@ sub init_setup {
     require './tboard_conf.pl';
     %CONF = (%CONF, conf());
 
-    ### ¥Ç¡¼¥¿ÍÑ¥Ç¥£¥ì¥¯¥È¥ê(data)¤ÎºîÀ®
-    ### ¥Ä¥ê¡¼¥Ç¡¼¥¿ÍÑ¥Ç¥£¥ì¥¯¥È¥ê(data/tree)¤ÎºîÀ®
-    ### Åê¹Æ¥Ç¡¼¥¿ÍÑ¥Ç¥£¥ì¥¯¥È¥ê(data/messages)¤ÎºîÀ®
-    ### Åê¹Æ¥Ç¡¼¥¿²áµî¥í¥°ÍÑ¥Ç¥£¥ì¥¯¥È¥ê(data/messages.old)¤ÎºîÀ®
+    ### ãƒ‡ãƒ¼ã‚¿ç”¨ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª(data)ã®ä½œæˆ
+    ### ãƒ„ãƒªãƒ¼ãƒ‡ãƒ¼ã‚¿ç”¨ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª(data/tree)ã®ä½œæˆ
+    ### æŠ•ç¨¿ãƒ‡ãƒ¼ã‚¿ç”¨ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª(data/messages)ã®ä½œæˆ
+    ### æŠ•ç¨¿ãƒ‡ãƒ¼ã‚¿éå»ãƒ­ã‚°ç”¨ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª(data/messages.old)ã®ä½œæˆ
     unless (-d "data") {
         mkdir("data", 0777)
-         or error("¥Ç¡¼¥¿ÍÑ¥Ç¥£¥ì¥¯¥È¥ê(data)¤ÎºîÀ®¤Ë¼ºÇÔ¤·¤Ş¤·¤¿¡£$CONF{message_permission}");
+         or error("ãƒ‡ãƒ¼ã‚¿ç”¨ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª(data)ã®ä½œæˆã«å¤±æ•—ã—ã¾ã—ãŸã€‚$CONF{message_permission}");
     }
     my %mkdir = (
-        tree => "¥Ä¥ê¡¼¥Ç¡¼¥¿ÍÑ¥Ç¥£¥ì¥¯¥È¥ê",
-        messages => "Åê¹Æ¥Ç¡¼¥¿ÍÑ¥Ç¥£¥ì¥¯¥È¥ê",
-        "messages.old" => "Åê¹Æ¥Ç¡¼¥¿²áµî¥í¥°ÍÑ¥Ç¥£¥ì¥¯¥È¥ê",
+        tree => "ãƒ„ãƒªãƒ¼ãƒ‡ãƒ¼ã‚¿ç”¨ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª",
+        messages => "æŠ•ç¨¿ãƒ‡ãƒ¼ã‚¿ç”¨ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª",
+        "messages.old" => "æŠ•ç¨¿ãƒ‡ãƒ¼ã‚¿éå»ãƒ­ã‚°ç”¨ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª",
     );
     foreach my $dir(keys %mkdir) {
         unless (-d "data/$dir") {
             mkdir("data/$dir", 0777)
-             or error("$mkdir{$dir}(data/$dir)¤ÎºîÀ®¤Ë¼ºÇÔ¤·¤Ş¤·¤¿¡£$CONF{message_permission}¤¦¤Ş¤¯¹Ô¤«¤Ê¤¤¾ì¹ç¤Ï¡¢¼êÆ°¤Çdata/$dir¥Ç¥£¥ì¥¯¥È¥ê¤òºîÀ®¤·¤Æ¤¯¤À¤µ¤¤¡£");
+             or error("$mkdir{$dir}(data/$dir)ã®ä½œæˆã«å¤±æ•—ã—ã¾ã—ãŸã€‚$CONF{message_permission}ã†ã¾ãè¡Œã‹ãªã„å ´åˆã¯ã€æ‰‹å‹•ã§data/$dirãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’ä½œæˆã—ã¦ãã ã•ã„ã€‚");
         }
     }
 
-    ### ¥í¥Ã¥¯ÍÑ¥Õ¥¡¥¤¥ë(lockfile)¤ÎºîÀ®
-    ### ¥¹¥ì¥Ã¥É¥Ş¥¹¥¿¥Õ¥¡¥¤¥ë(tboard_tree.cgi)¤ÎºîÀ®
-    ### Åê¹Æ¥Ç¡¼¥¿¥Õ¥¡¥¤¥ë(tboard_message.cgi)¤ÎºîÀ®
-    ### È¯¸ÀÈÖ¹æ´ÉÍı¥Õ¥¡¥¤¥ë(tboard_cnt.dat)¤ÎºîÀ®
-    ### ´ÉÍıÍÑ¥Ñ¥¹¥ï¡¼¥É¥Õ¥¡¥¤¥ë(tboard_passwd.dat)¤ÎºîÀ®
+    ### ãƒ­ãƒƒã‚¯ç”¨ãƒ•ã‚¡ã‚¤ãƒ«(lockfile)ã®ä½œæˆ
+    ### ã‚¹ãƒ¬ãƒƒãƒ‰ãƒã‚¹ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«(tboard_tree.cgi)ã®ä½œæˆ
+    ### æŠ•ç¨¿ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«(tboard_message.cgi)ã®ä½œæˆ
+    ### ç™ºè¨€ç•ªå·ç®¡ç†ãƒ•ã‚¡ã‚¤ãƒ«(tboard_cnt.dat)ã®ä½œæˆ
+    ### ç®¡ç†ç”¨ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ãƒ•ã‚¡ã‚¤ãƒ«(tboard_passwd.dat)ã®ä½œæˆ
     my %mkfile = (
-        lockfile => "¥í¥Ã¥¯ÍÑ¥Õ¥¡¥¤¥ë",
-        "tboard_tree.cgi" => "¥¹¥ì¥Ã¥É¥Ş¥¹¥¿¥Õ¥¡¥¤¥ë",
-        "tboard_message.cgi" => "Åê¹Æ¥Ç¡¼¥¿¥Õ¥¡¥¤¥ë",
-        "tboard_msgno.cgi" => "È¯¸ÀÈÖ¹æ´ÉÍı¥Õ¥¡¥¤¥ë",
-        "tboard_passwd.cgi" => "´ÉÍıÍÑ¥Ñ¥¹¥ï¡¼¥É¥Õ¥¡¥¤¥ë",
+        lockfile => "ãƒ­ãƒƒã‚¯ç”¨ãƒ•ã‚¡ã‚¤ãƒ«",
+        "tboard_tree.cgi" => "ã‚¹ãƒ¬ãƒƒãƒ‰ãƒã‚¹ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«",
+        "tboard_message.cgi" => "æŠ•ç¨¿ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«",
+        "tboard_msgno.cgi" => "ç™ºè¨€ç•ªå·ç®¡ç†ãƒ•ã‚¡ã‚¤ãƒ«",
+        "tboard_passwd.cgi" => "ç®¡ç†ç”¨ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ãƒ•ã‚¡ã‚¤ãƒ«",
     );
     foreach my $file(keys %mkfile) {
         unless (-e "data/$file") {
             open(W, "> data/$file")
-             or error("$mkfile{$file}(data/$file)¤ÎºîÀ®¤Ë¼ºÇÔ¤·¤Ş¤·¤¿¡£$CONF{message_permission}");
+             or error("$mkfile{$file}(data/$file)ã®ä½œæˆã«å¤±æ•—ã—ã¾ã—ãŸã€‚$CONF{message_permission}");
             close(W);
         }
     }
@@ -1151,11 +1149,11 @@ sub init_setup {
 sub login {
 
     open(R, "tboard_passwd.cgi")
-     or error("¥Ñ¥¹¥ï¡¼¥É¥Õ¥¡¥¤¥ë¤¬³«¤±¤Ş¤»¤ó¤Ç¤·¤¿¡£: $!");
+     or error("ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ãƒ•ã‚¡ã‚¤ãƒ«ãŒé–‹ã‘ã¾ã›ã‚“ã§ã—ãŸã€‚: $!");
     chomp(my $login_passwd = <R>);
     close(R);
     unless (crypt_passwd_is_valid($FORM{passwd}, $login_passwd)) {
-        error('´ÉÍıÍÑ¥Ñ¥¹¥ï¡¼¥É¤¬°ã¤¤¤Ş¤¹¡£',"$FORM{passwd}, $login_passwd");
+        error('ç®¡ç†ç”¨ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ãŒé•ã„ã¾ã™ã€‚',"$FORM{passwd}, $login_passwd");
     }
     set_cookie('TBOARD_ADMIN', "", "login");
     if ($FORM{do_cache}) {
@@ -1179,14 +1177,14 @@ sub login_form {
     my $checked = $passwd_cache ne '' ? 'checked' : "";
     print _admin_header();
     print <<HTML;
-¤³¤Î¥·¥¹¥Æ¥à¤òÍøÍÑ¤¹¤ë¤Ë¤Ï¥í¥°¥¤¥ó¤¬É¬Í×¤Ç¤¹¡£<br>
-´ÉÍıÍÑ¥Ñ¥¹¥ï¡¼¥É¤òÆşÎÏ¤·¤Æ¤¯¤À¤µ¤¤¡£<p>
+ã“ã®ã‚·ã‚¹ãƒ†ãƒ ã‚’åˆ©ç”¨ã™ã‚‹ã«ã¯ãƒ­ã‚°ã‚¤ãƒ³ãŒå¿…è¦ã§ã™ã€‚<br>
+ç®¡ç†ç”¨ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚<p>
 
 <form action=$CONF{script_name} method=post>
 <input type=hidden name=login value=1>
 <input type=password name=passwd size=14 value="$passwd_cache">
-<input type=submit value=¥í¥°¥¤¥ó><br>
-<input type=checkbox name=do_cache value=1 $checked>¥Ñ¥¹¥ï¡¼¥É¤òµ­²±¤¹¤ë
+<input type=submit value=ãƒ­ã‚°ã‚¤ãƒ³><br>
+<input type=checkbox name=do_cache value=1 $checked>ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã‚’è¨˜æ†¶ã™ã‚‹
 </form><p>
 HTML
     print _footer();
@@ -1199,8 +1197,8 @@ sub logout {
     set_cookie('TBOARD_ADMIN');
     print _admin_header();
     print <<HTML;
-¥í¥°¥¢¥¦¥È¤·¤Ş¤·¤¿¡£<p><br><br><br>
-<a href="$CONF{script_name}?admin">´ÉÍıÍÑ¥á¥Ë¥å¡¼¤Ø</a><p>
+ãƒ­ã‚°ã‚¢ã‚¦ãƒˆã—ã¾ã—ãŸã€‚<p><br><br><br>
+<a href="$CONF{script_name}?admin">ç®¡ç†ç”¨ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã¸</a><p>
 HTML
     print _footer();
 
@@ -1212,12 +1210,12 @@ sub mailform {
 
     my $msgno = $FORM{mailform};
 
-    # ¥¯¥Ã¥­¡¼¥Ç¡¼¥¿¤ò¥í¡¼¥É
+    # ã‚¯ãƒƒã‚­ãƒ¼ãƒ‡ãƒ¼ã‚¿ã‚’ãƒ­ãƒ¼ãƒ‰
     my %data = cookie_data_decode(get_cookie('TBOARD'));
 
     my $p = table_select("tboard_message.cgi","msgno=$msgno,stat=1");
-    $p->{msgno} or error("³ºÅö¤¹¤ëÅê¹Æ¥Ç¡¼¥¿(msgno=$msgno)¤¬¤¢¤ê¤Ş¤»¤ó¤Ç¤·¤¿");
-    error("¤³¤ÎÅê¹Æ(msgno=$msgno)¤ÎÅê¹Æ¼Ô¤ËÂĞ¤·¤Æ¥á¡¼¥ë¤ÎÅ¾Á÷¤Ï¤Ç¤­¤Ş¤»¤ó¡£")
+    $p->{msgno} or error("è©²å½“ã™ã‚‹æŠ•ç¨¿ãƒ‡ãƒ¼ã‚¿(msgno=$msgno)ãŒã‚ã‚Šã¾ã›ã‚“ã§ã—ãŸ");
+    error("ã“ã®æŠ•ç¨¿(msgno=$msgno)ã®æŠ•ç¨¿è€…ã«å¯¾ã—ã¦ãƒ¡ãƒ¼ãƒ«ã®è»¢é€ã¯ã§ãã¾ã›ã‚“ã€‚")
      unless $p->{email_mode} == 2;
 
     my $htmlstr = _mailform_html();
@@ -1229,7 +1227,7 @@ sub mailform {
     $htmlstr =~ s/##script_name##/$CONF{script_name}/g;
     $htmlstr =~ s/##([^#]+)##/$data{$1}/g;
 
-    print _header("¥á¡¼¥ëÁ÷¿®¥Õ¥©¡¼¥à");
+    print _header("ãƒ¡ãƒ¼ãƒ«é€ä¿¡ãƒ•ã‚©ãƒ¼ãƒ ");
     print $htmlstr;
     print _footer();
     exit;
@@ -1241,18 +1239,18 @@ sub mailform_done {
     my $msgno = $FORM{msgno};
 
     my $p = table_select("tboard_message.cgi","msgno=$msgno,stat=1");
-    $p->{msgno} or error("³ºÅö¤¹¤ëÅê¹Æ¥Ç¡¼¥¿(msgno=$msgno)¤¬¤¢¤ê¤Ş¤»¤ó¤Ç¤·¤¿");
-    error("¤³¤ÎÅê¹Æ(msgno=$msgno)¤ÎÅê¹Æ¼Ô¤ËÂĞ¤·¤Æ¥á¡¼¥ë¤ÎÅ¾Á÷¤Ï¤Ç¤­¤Ş¤»¤ó¡£")
+    $p->{msgno} or error("è©²å½“ã™ã‚‹æŠ•ç¨¿ãƒ‡ãƒ¼ã‚¿(msgno=$msgno)ãŒã‚ã‚Šã¾ã›ã‚“ã§ã—ãŸ");
+    error("ã“ã®æŠ•ç¨¿(msgno=$msgno)ã®æŠ•ç¨¿è€…ã«å¯¾ã—ã¦ãƒ¡ãƒ¼ãƒ«ã®è»¢é€ã¯ã§ãã¾ã›ã‚“ã€‚")
      unless $p->{email_mode} == 2;
 
     my @msg = mailform_input_check(\%FORM);
     error(@msg) if @msg;
 
-    jcode::convert(\$FORM{name}, 'jis', 'euc');
+    $FORM{name} = Unicode::Japanese->new($FORM{name}, "utf8")->jis;
     my $from = '"' . enc_b64($FORM{name}) . '" <' . $FORM{email} . '>';
     my $mailstr = <<STR;
-¢¨¡Ö$CONF{title}($CONF{script_url})¡×
-  No.$msgno¡Ö$p->{subject}¡×¤ËÂĞ¤¹¤ëÅ¾Á÷¥á¡¼¥ë¤Ç¤¹¡£
+â€»ã€Œ$CONF{title}($CONF{script_url})ã€
+  No.$msgnoã€Œ$p->{subject}ã€ã«å¯¾ã™ã‚‹è»¢é€ãƒ¡ãƒ¼ãƒ«ã§ã™ã€‚
 --------------------------------------------------------------------
 $FORM{message}
 ---------------------
@@ -1262,8 +1260,8 @@ STR
 
     sendmail($p->{email}, $from, $FORM{subject}, $mailstr);
 
-    print _header("¥á¡¼¥ëÁ÷¿®¥Õ¥©¡¼¥à");
-    print "<p>Á÷¿®¤·¤Ş¤·¤¿¡£<p><a href=$CONF{script_name}?>Åê¹Æ°ìÍ÷¤Ø</a>";
+    print _header("ãƒ¡ãƒ¼ãƒ«é€ä¿¡ãƒ•ã‚©ãƒ¼ãƒ ");
+    print "<p>é€ä¿¡ã—ã¾ã—ãŸã€‚<p><a href=$CONF{script_name}?>æŠ•ç¨¿ä¸€è¦§ã¸</a>";
     print _footer();
     exit;
 
@@ -1273,12 +1271,12 @@ sub mailform_input_check {
 
     my @msg;
     my $data_ref = shift;
-    $data_ref->{name} or push(@msg,'Åê¹Æ¼ÔÌ¾¤òÆşÎÏ¤·¤Æ¤¯¤À¤µ¤¤¡£');
-    $data_ref->{message} or push(@msg,'ËÜÊ¸¤òÆşÎÏ¤·¤Æ¤¯¤À¤µ¤¤¡£');
+    $data_ref->{name} or push(@msg,'æŠ•ç¨¿è€…åã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚');
+    $data_ref->{message} or push(@msg,'æœ¬æ–‡ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚');
     my @msg_;
     ($data_ref->{email}, @msg_) = email_chk($data_ref->{email},required=>1);
     push(@msg, @msg_) if @msg_;
-    $data_ref->{subject} ||= '(ÌµÂê)';
+    $data_ref->{subject} ||= '(ç„¡é¡Œ)';
     @msg;
 
 }
@@ -1310,18 +1308,18 @@ sub mk_navi_bar {
 
     my($hl, %d) = @_;
     my %button = (
-        1 => { url=>$CONF{home_url}, str=>"£È£Ï£Í£Å"},
-        2 => { url=>"$CONF{script_name}?com&p=$d{p}&o=$d{o}", str=>"¿·µ¬Åê¹Æ"},
-        3 => { url=>"$CONF{script_name}?help", str=>"£È£Å£Ì£Ğ" },
-        4 => { url=>"$CONF{script_name}?", str=>"¥Ä¥ê¡¼É½¼¨" },
-        5 => { url=>"$CONF{script_name}?t=thread", str=>"¥¹¥ì¥Ã¥ÉÉ½¼¨" },
-        6 => { url=>"$CONF{script_name}?t=list", str=>"¥¿¥¤¥È¥ë¤Î¤ß" },
-        7 => { url=>"$CONF{script_name}?t=list2", str=>"Á´É½¼¨" },
-        8 => { url=>"$CONF{script_name}?t=topic", str=>"¥È¥Ô¥Ã¥¯É½¼¨" },
+        1 => { url=>$CONF{home_url}, str=>"ï¼¨ï¼¯ï¼­ï¼¥"},
+        2 => { url=>"$CONF{script_name}?com&p=$d{p}&o=$d{o}", str=>"æ–°è¦æŠ•ç¨¿"},
+        3 => { url=>"$CONF{script_name}?help", str=>"ï¼¨ï¼¥ï¼¬ï¼°" },
+        4 => { url=>"$CONF{script_name}?", str=>"ãƒ„ãƒªãƒ¼è¡¨ç¤º" },
+        5 => { url=>"$CONF{script_name}?t=thread", str=>"ã‚¹ãƒ¬ãƒƒãƒ‰è¡¨ç¤º" },
+        6 => { url=>"$CONF{script_name}?t=list", str=>"ã‚¿ã‚¤ãƒˆãƒ«ã®ã¿" },
+        7 => { url=>"$CONF{script_name}?t=list2", str=>"å…¨è¡¨ç¤º" },
+        8 => { url=>"$CONF{script_name}?t=topic", str=>"ãƒˆãƒ”ãƒƒã‚¯è¡¨ç¤º" },
         9 => { url=>"$CONF{script_name}?search_form&p=$d{p}&o=$d{o}",
-         str=>"¸¡¡¡º÷" },
-        10 => { url=>"$CONF{script_name}?cookie_mod", str=>"¸Ä¿ÍÀßÄê" },
-        99 => { url=>"$CONF{script_name}?admin", str=>"´ÉÍıÍÑ" },
+         str=>"æ¤œã€€ç´¢" },
+        10 => { url=>"$CONF{script_name}?cookie_mod", str=>"å€‹äººè¨­å®š" },
+        99 => { url=>"$CONF{script_name}?admin", str=>"ç®¡ç†ç”¨" },
         tree   => 4,
         thread => 5,
         list   => 6,
@@ -1357,7 +1355,7 @@ sub mk_shousai_html {
     my $p2;
     if ($msgno and !exists $FORM{name}) {
         $p ||= table_select("tboard_message.cgi","msgno=$msgno,stat=1");
-        $p->{msgno} or error("³ºÅö¤¹¤ëÅê¹Æ¥Ç¡¼¥¿(msgno=$msgno)¤¬¤¢¤ê¤Ş¤»¤ó¤Ç¤·¤¿");
+        $p->{msgno} or error("è©²å½“ã™ã‚‹æŠ•ç¨¿ãƒ‡ãƒ¼ã‚¿(msgno=$msgno)ãŒã‚ã‚Šã¾ã›ã‚“ã§ã—ãŸ");
     } else {
         $p = \%FORM;
         $p->{msgno} ||= "*";
@@ -1411,7 +1409,7 @@ sub mk_shousai_html {
         $p->{icon_dsp} = qq{<img src="img/icon/$p->{icon}">};
     }
 
-    ### É½¼¨¤ÏÌ¤¼ÂÁõ
+    ### è¡¨ç¤ºã¯æœªå®Ÿè£…
     my $format = _view2_html();
     foreach (qw(message message2 subject url email)) {
         $format =~ s/##$_##/$p->{"${_}_dsp"}/eg;
@@ -1461,19 +1459,19 @@ sub mk_tree {
         my $max;
         my %n;
         unless ($line->[1]) {
-            $liststr = "¢¦" . $line->[2] . "<br>\n" . $liststr;
+            $liststr = "â–½" . $line->[2] . "<br>\n" . $liststr;
             next;
         }
         $max = $line->[1];
-        $b{$line->[1]} ? ( $n{$line->[1]} = '¨§' )
-                       : ( $n{$line->[1]} = '¨¦' );
+        $b{$line->[1]} ? ( $n{$line->[1]} = 'â”œ' )
+                       : ( $n{$line->[1]} = 'â””' );
         foreach my $i(keys %b) {
             if ($i > $line->[1]) {  next; }
             $max = $i if $max < $i;
-            if ($b{$i} and $i != $line->[1]) { $n{$i} = '¨¢' }
+            if ($b{$i} and $i != $line->[1]) { $n{$i} = 'â”‚' }
         }
         $liststr = "<tt>" .
-                   join("", map { $_ or '¡¡' } @n{0..$max}) . "</tt>" .
+                   join("", map { $_ or 'ã€€' } @n{0..$max}) . "</tt>" .
                    $line->[2] . "<br>\n" . $liststr;
         %b = map { $_, $n{$_} } (1..$line->[1]);
     }
@@ -1489,10 +1487,10 @@ sub mk_tree_data {
     $ref->{data}->{$msgno}->{subject}
      = html_output_escape($ref->{data}->{$msgno}->{subject});
     if ($ref->{data}->{$msgno}->{del_flag} == 1) {
-        $ref->{data}->{$msgno}->{subject} = "(Åê¹Æ¼Ôºï½ü)";
+        $ref->{data}->{$msgno}->{subject} = "(æŠ•ç¨¿è€…å‰Šé™¤)";
         $ref->{data}->{$msgno}->{name} = "";
     } elsif ($ref->{data}->{$msgno}->{del_flag} == 2) {
-        $ref->{data}->{$msgno}->{subject} = "(´ÉÍı¼Ôºï½ü)";
+        $ref->{data}->{$msgno}->{subject} = "(ç®¡ç†è€…å‰Šé™¤)";
         $ref->{data}->{$msgno}->{name} = "";
     }
     my $list_format_ = $CONF{tree_format};
@@ -1528,8 +1526,8 @@ sub sendmail {
 
     my($mailto, $from, $subject, $mailstr, $date) = @_;
 
-    jcode::convert(\$subject,'jis');
-    jcode::convert(\$mailstr,'jis');
+    $subject = Unicode::Japanese->new($subject, "utf8")->jis;
+    $mailstr = Unicode::Japanese->new($mailstr, "utf8")->jis;
     $subject = enc_b64($subject) if $subject =~ /[^\t\n\x20-\x7e]/;
     $date ||= get_datetime_for_sendmail();
 
@@ -1548,7 +1546,7 @@ STR
     if ($CONF{mailsend} eq 'smtp') {
         unless ($smtp) {
             eval { use Net::SMTP; };
-            error("Net::SMTP¥â¥¸¥å¡¼¥ë¤¬»ÈÍÑ¤Ç¤­¤Ş¤»¤ó¡£: $@") if $@;
+            error("Net::SMTPãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ãŒä½¿ç”¨ã§ãã¾ã›ã‚“ã€‚: $@") if $@;
             $smtp = Net::SMTP->new($CONF{smtp});
         }
         $smtp->mail($from);
@@ -1559,9 +1557,9 @@ STR
 #        $smtp->quit;
     } else {
         open(SEND, "|$CONF{sendmail} -t 1>/dev/null 2>/dev/null")
-         or error("$mailto ¤Ø¤ÎÁ÷¿®¤Ë¼ºÇÔ¤·¤Ş¤·¤¿¡£: $!");
+         or error("$mailto ã¸ã®é€ä¿¡ã«å¤±æ•—ã—ã¾ã—ãŸã€‚: $!");
         print SEND $maildata;
-        close(SEND) or error("$mailto ¤Ø¤ÎÁ÷¿®¤Ë¼ºÇÔ¤·¤Ş¤·¤¿¡£: $!");
+        close(SEND) or error("$mailto ã¸ã®é€ä¿¡ã«å¤±æ•—ã—ã¾ã—ãŸã€‚: $!");
     }
 }
 
@@ -1569,11 +1567,11 @@ sub session_data {
 
     my($mode, $sid, $data_ref) = @_;
     ($sid) = $sid =~ /^(\w+)$/;
-    $sid or error("session_data: ¥»¥Ã¥·¥ç¥óID¤ò»ØÄê¤·¤Æ¤¯¤À¤µ¤¤¡£");
+    $sid or error("session_data: ã‚»ãƒƒã‚·ãƒ§ãƒ³IDã‚’æŒ‡å®šã—ã¦ãã ã•ã„ã€‚");
 
     if ($mode eq 'set') {
         open(W, "> temp/$sid")
-         or error("¥»¥Ã¥·¥ç¥ó¥Ç¡¼¥¿¥Õ¥¡¥¤¥ë¤Î½ñ¤­¹ş¤ß¤¬¤Ç¤­¤Ş¤»¤ó¤Ç¤·¤¿¡£: $!");
+         or error("ã‚»ãƒƒã‚·ãƒ§ãƒ³ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«ã®æ›¸ãè¾¼ã¿ãŒã§ãã¾ã›ã‚“ã§ã—ãŸã€‚: $!");
         foreach my $f(sort @{$CONF{session_data_fields}}) {
             my $v = $data_ref->{$f};
             $v =~ s/\r\n|\r|\n/\x0b/g;
@@ -1633,9 +1631,9 @@ sub set_default {
 
     $hash_ref->{color}        ||= '#333333 steelblue blue navy green darkgreen brown darkorange purple';
 
-    $hash_ref->{sexstr}       ||= 'ÃËÀ­ ½÷À­ ÃæÀ­ ¤Ò¤ß¤Ä';
-    $hash_ref->{prefstr}      ||= '¿¦¾ì ¼«Âğ µÒÀè ¤Ò¤ß¤Ä ËÌ³¤Æ» ÀÄ¿¹¸© ´ä¼ê¸© µÜ¾ë¸© ½©ÅÄ¸© »³·Á¸© Ê¡Åç¸© °ñ¾ë¸© ÆÊÌÚ¸© ·²ÇÏ¸© ºë¶Ì¸© ÀéÍÕ¸© ÅìµşÅÔ ¿ÀÆàÀî¸© »³Íü¸© Ä¹Ìî¸© ¿·³ã¸© ÉÙ»³¸© ÀĞÀî¸© Ê¡°æ¸© ´ôÉì¸© ÀÅ²¬¸© °¦ÃÎ¸© »°½Å¸© ¼¢²ì¸© µşÅÔÉÜ ÂçºåÉÜ Ê¼¸Ë¸© ÆàÎÉ¸© ÏÂ²Î»³¸© Ä»¼è¸© Åçº¬¸© ²¬»³¸© ¹­Åç¸© »³¸ı¸© ÆÁÅç¸© ¹áÀî¸© °¦É²¸© ¹âÃÎ¸© Ê¡²¬¸© º´²ì¸© Ä¹ºê¸© ·§ËÜ¸© ÂçÊ¬¸© µÜºê¸© ¼¯»ùÅç¸© ²­Æì¸© ³¤³°';
-    $hash_ref->{agestr}        ||= '¤³¤É¤â ¾¯Ç¯ ¾¯½÷ ¼ã¼Ô ÀÄÇ¯ ²µ½÷ 10Âå 20Âå 30Âå 40Âå 50Âå 60Âå°Ê¾å';
+    $hash_ref->{sexstr}       ||= 'ç”·æ€§ å¥³æ€§ ä¸­æ€§ ã²ã¿ã¤';
+    $hash_ref->{prefstr}      ||= 'è·å ´ è‡ªå®… å®¢å…ˆ ã²ã¿ã¤ åŒ—æµ·é“ é’æ£®çœŒ å²©æ‰‹çœŒ å®®åŸçœŒ ç§‹ç”°çœŒ å±±å½¢çœŒ ç¦å³¶çœŒ èŒ¨åŸçœŒ æ ƒæœ¨çœŒ ç¾¤é¦¬çœŒ åŸ¼ç‰çœŒ åƒè‘‰çœŒ æ±äº¬éƒ½ ç¥å¥ˆå·çœŒ å±±æ¢¨çœŒ é•·é‡çœŒ æ–°æ½ŸçœŒ å¯Œå±±çœŒ çŸ³å·çœŒ ç¦äº•çœŒ å²é˜œçœŒ é™å²¡çœŒ æ„›çŸ¥çœŒ ä¸‰é‡çœŒ æ»‹è³€çœŒ äº¬éƒ½åºœ å¤§é˜ªåºœ å…µåº«çœŒ å¥ˆè‰¯çœŒ å’Œæ­Œå±±çœŒ é³¥å–çœŒ å³¶æ ¹çœŒ å²¡å±±çœŒ åºƒå³¶çœŒ å±±å£çœŒ å¾³å³¶çœŒ é¦™å·çœŒ æ„›åª›çœŒ é«˜çŸ¥çœŒ ç¦å²¡çœŒ ä½è³€çœŒ é•·å´çœŒ ç†Šæœ¬çœŒ å¤§åˆ†çœŒ å®®å´çœŒ é¹¿å…å³¶çœŒ æ²–ç¸„çœŒ æµ·å¤–';
+    $hash_ref->{agestr}        ||= 'ã“ã©ã‚‚ å°‘å¹´ å°‘å¥³ è‹¥è€… é’å¹´ ä¹™å¥³ 10ä»£ 20ä»£ 30ä»£ 40ä»£ 50ä»£ 60ä»£ä»¥ä¸Š';
 
     $hash_ref->{body_text}     ||= '#333333';
     $hash_ref->{body_bgcolor}  ||= '#ffffff';
@@ -1669,19 +1667,19 @@ STR
     $hash_ref->{opt_notify}     ||= 0;
     $hash_ref->{opt_url}        ||= 1;
     $hash_ref->{opt_solved}     ||= 0;
-    $hash_ref->{opt_solved_str} = '<font color=red>[²ò·è!]</font>';
+    $hash_ref->{opt_solved_str} = '<font color=red>[è§£æ±º!]</font>';
     $hash_ref->{opt_message2}   ||= 0;
     $hash_ref->{opt_cid}        ||= 1;
     $hash_ref->{opt_icon}       ||= 0;
     $hash_ref->{icon_list}      ||= join("\n", (map { sprintf("a_%04d.gif", $_) } 1..14),(map { sprintf("b_%04d.gif", $_) } 1..14));
     $hash_ref->{icon_list_str}  ||= join("\n", qw{
-     ¤ï¡¼¤¤(¥Ö¥ë¡¼) ¤ï¤Ï¤Ï¤Ï(¥Ö¥ë¡¼) ¤ï¤¯¤ï¤¯(¥Ö¥ë¡¼) ¤¦¤§¡¼¤ó(¥Ö¥ë¡¼)
-     ¤Á¤å¤Ã(¥Ö¥ë¡¼) ¤×¤ó(¥Ö¥ë¡¼) ¤´¤á¤ó¤Í(¥Ö¥ë¡¼) ¤¢¤ê¤¬¤È(¥Ö¥ë¡¼)
-     Zzzz...(¥Ö¥ë¡¼) ¤Ë¤ä¤ê(¥Ö¥ë¡¼) Îä¤ä´À(¥Ö¥ë¡¼) ¤´¤ë¤¡¤¡(¥Ö¥ë¡¼)
-     ¤é¤ó¤é¤ó¢ö(¥Ö¥ë¡¼) ¤İ¤Ã(¥Ö¥ë¡¼) ¤ï¡¼¤¤(¥Ô¥ó¥¯) ¤ï¤Ï¤Ï¤Ï(¥Ô¥ó¥¯)
-     ¤ï¤¯¤ï¤¯(¥Ô¥ó¥¯) ¤¦¤§¡¼¤ó(¥Ô¥ó¥¯) ¤Á¤å¤Ã(¥Ô¥ó¥¯) ¤×¤ó(¥Ô¥ó¥¯)
-     ¤´¤á¤ó¤Í(¥Ô¥ó¥¯) ¤¢¤ê¤¬¤È(¥Ô¥ó¥¯) Zzzz...(¥Ô¥ó¥¯) ¤Ë¤ä¤ê(¥Ô¥ó¥¯)
-     Îä¤ä´À(¥Ô¥ó¥¯) ¤´¤ë¤¡¤¡(¥Ô¥ó¥¯) ¤é¤ó¤é¤ó¢ö(¥Ô¥ó¥¯) ¤İ¤Ã(¥Ô¥ó¥¯)
+     ã‚ãƒ¼ã„(ãƒ–ãƒ«ãƒ¼) ã‚ã¯ã¯ã¯(ãƒ–ãƒ«ãƒ¼) ã‚ãã‚ã(ãƒ–ãƒ«ãƒ¼) ã†ã‡ãƒ¼ã‚“(ãƒ–ãƒ«ãƒ¼)
+     ã¡ã‚…ã£(ãƒ–ãƒ«ãƒ¼) ã·ã‚“(ãƒ–ãƒ«ãƒ¼) ã”ã‚ã‚“ã­(ãƒ–ãƒ«ãƒ¼) ã‚ã‚ŠãŒã¨(ãƒ–ãƒ«ãƒ¼)
+     Zzzz...(ãƒ–ãƒ«ãƒ¼) ã«ã‚„ã‚Š(ãƒ–ãƒ«ãƒ¼) å†·ã‚„æ±—(ãƒ–ãƒ«ãƒ¼) ã”ã‚‹ãã(ãƒ–ãƒ«ãƒ¼)
+     ã‚‰ã‚“ã‚‰ã‚“â™ª(ãƒ–ãƒ«ãƒ¼) ã½ã£(ãƒ–ãƒ«ãƒ¼) ã‚ãƒ¼ã„(ãƒ”ãƒ³ã‚¯) ã‚ã¯ã¯ã¯(ãƒ”ãƒ³ã‚¯)
+     ã‚ãã‚ã(ãƒ”ãƒ³ã‚¯) ã†ã‡ãƒ¼ã‚“(ãƒ”ãƒ³ã‚¯) ã¡ã‚…ã£(ãƒ”ãƒ³ã‚¯) ã·ã‚“(ãƒ”ãƒ³ã‚¯)
+     ã”ã‚ã‚“ã­(ãƒ”ãƒ³ã‚¯) ã‚ã‚ŠãŒã¨(ãƒ”ãƒ³ã‚¯) Zzzz...(ãƒ”ãƒ³ã‚¯) ã«ã‚„ã‚Š(ãƒ”ãƒ³ã‚¯)
+     å†·ã‚„æ±—(ãƒ”ãƒ³ã‚¯) ã”ã‚‹ãã(ãƒ”ãƒ³ã‚¯) ã‚‰ã‚“ã‚‰ã‚“â™ª(ãƒ”ãƒ³ã‚¯) ã½ã£(ãƒ”ãƒ³ã‚¯)
     });
     $hash_ref->{new_mark}       ||= 24;
     $hash_ref->{new_mark_str}   ||= '<img src=img/new.gif alt=NEW! border=0>';
@@ -1712,7 +1710,7 @@ sub setup {
     }
     $htmlstr =~ s/##([^#]+)##/html_output_escape($CONF{$1})/eg;
 
-    print _admin_header("´Ä¶­ÀßÄê");
+    print _admin_header("ç’°å¢ƒè¨­å®š");
     print $htmlstr;
     print _footer();
     exit;
@@ -1731,8 +1729,8 @@ sub setup2 {
     } else {
         print _admin_header();
         print <<HTML;
-´Ä¶­ÀßÄê¤ò¹¹¿·¤·¤Ş¤·¤¿¡£<p><br><br>
-<a href="$CONF{script_name}?admin">´ÉÍıÍÑ¥á¥Ë¥å¡¼¤Ø</a><p>
+ç’°å¢ƒè¨­å®šã‚’æ›´æ–°ã—ã¾ã—ãŸã€‚<p><br><br>
+<a href="$CONF{script_name}?admin">ç®¡ç†ç”¨ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã¸</a><p>
 HTML
         print _footer();
         exit;
@@ -1742,7 +1740,7 @@ HTML
 
 sub setver {
 #########################################
-#### ¤³¤ÎÉôÊ¬¤ÏÊÑ¹¹¤·¤Ê¤¤¤Ç¤¯¤À¤µ¤¤¡£####
+#### ã“ã®éƒ¨åˆ†ã¯å¤‰æ›´ã—ãªã„ã§ãã ã•ã„ã€‚####
 #########################################
     my %setver = (
         prod_name => q{Tree Board},
@@ -1764,13 +1762,13 @@ sub table_delete {
     ($path) = $path =~ m#^((?:\.\./|[^/]?)[/\d\w]+)$#;
 
     my($k,$v) = split(/\s*=\s*/, $key);
-    error("¾È¹ç¾ò·ï¤¬»ØÄê¤µ¤ì¤Æ¤¤¤Ş¤»¤ó¡£: $key") unless $k;
+    error("ç…§åˆæ¡ä»¶ãŒæŒ‡å®šã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚: $key") unless $k;
     my @data;
     my @deleted;
 
     $LOCKED = file_lock() unless $LOCKED;
     open(R, "$path/$tablename")
-     or error("¥Æ¡¼¥Ö¥ë¥Ç¡¼¥¿¥Õ¥¡¥¤¥ë¤¬³«¤±¤Ş¤»¤ó¤Ç¤·¤¿¡£: $!",@_);
+     or error("ãƒ†ãƒ¼ãƒ–ãƒ«ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«ãŒé–‹ã‘ã¾ã›ã‚“ã§ã—ãŸã€‚: $!",@_);
     while (my $line = <R>) {
         my %d;
         chomp($line);
@@ -1783,7 +1781,7 @@ sub table_delete {
     }
 
     open(W, ">$path/$tablename")
-     or error("¥Æ¡¼¥Ö¥ë¥Ç¡¼¥¿¥Õ¥¡¥¤¥ë¤¬³«¤±¤Ş¤»¤ó¤Ç¤·¤¿¡£: $!",@_);
+     or error("ãƒ†ãƒ¼ãƒ–ãƒ«ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«ãŒé–‹ã‘ã¾ã›ã‚“ã§ã—ãŸã€‚: $!",@_);
     foreach (@data) { print W "$_\n"; }
     close(W);
 
@@ -1796,27 +1794,27 @@ sub table_insert {
     my($tablename,$data_ref,$key,$path) = @_; #error($key);
     my $hash_tables_key = $tablename;
 
-    ### tboard.cgiÍÑ¤Î³ÈÄ¥ÉôÊ¬ ¤³¤³¤«¤é ####
+    ### tboard.cgiç”¨ã®æ‹¡å¼µéƒ¨åˆ† ã“ã“ã‹ã‚‰ ####
     if (($tablename) = $tablename =~ /^(\d+\.cgi)$/) {
         $hash_tables_key = "tboard_message.cgi";
     } else {
         $tablename = $hash_tables_key;
     }
-    ### tboard.cgiÍÑ¤Î³ÈÄ¥ÉôÊ¬ ¤³¤³¤Ş¤Ç ####
+    ### tboard.cgiç”¨ã®æ‹¡å¼µéƒ¨åˆ† ã“ã“ã¾ã§ ####
 
     $path ||= "data";
     ($path) = $path =~ m#^((?:\.\./|[^/]?)[/\d\w]+)$#;
 
     unless (-e "$path/$tablename") {
         ($tablename) = $tablename =~ /^(\d+\.cgi)$/;
-        $tablename or error("ÉÔÀµ¤Ê¥Æ¡¼¥Ö¥ëÌ¾¤ò»ØÄê¤·¤Æ¤¤¤Ş¤¹¡£: $tablename");
+        $tablename or error("ä¸æ­£ãªãƒ†ãƒ¼ãƒ–ãƒ«åã‚’æŒ‡å®šã—ã¦ã„ã¾ã™ã€‚: $tablename");
     }
 
     $LOCKED = file_lock() unless $LOCKED;
     my $serial_max;
     if ($key) {
         open(R, "$path/$tablename");
-#         or error("¥Æ¡¼¥Ö¥ë¥Ç¡¼¥¿¥Õ¥¡¥¤¥ë¤¬³«¤±¤Ş¤»¤ó¤Ç¤·¤¿¡£: $!",@_);
+#         or error("ãƒ†ãƒ¼ãƒ–ãƒ«ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«ãŒé–‹ã‘ã¾ã›ã‚“ã§ã—ãŸã€‚: $!",@_);
         while (<R>) {
             my %d;
             my $skip;
@@ -1826,7 +1824,7 @@ sub table_insert {
                 $serial_max = $d{$key} if $serial_max <= $d{$key};
             } else {
                 if ($d{$key} eq $data_ref->{$key}) {
-                    error("¥­¡¼¤¬½ÅÊ£¤·¤Æ¤¤¤Ş¤¹¡£: $key=$d{$key}");
+                    error("ã‚­ãƒ¼ãŒé‡è¤‡ã—ã¦ã„ã¾ã™ã€‚: $key=$d{$key}");
                 }
             }
         }
@@ -1834,7 +1832,7 @@ sub table_insert {
     $data_ref->{$key} = ++$serial_max if $data_ref->{$key} eq '__serial__';
     $data_ref->{reg_date} = $data_ref->{last_update} = get_datetime(time);
     open(W, ">>$path/$tablename")
-     or error("¥Æ¡¼¥Ö¥ë¥Ç¡¼¥¿¥Õ¥¡¥¤¥ë¤¬³«¤±¤Ş¤»¤ó¤Ç¤·¤¿¡£: $!",@_);
+     or error("ãƒ†ãƒ¼ãƒ–ãƒ«ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«ãŒé–‹ã‘ã¾ã›ã‚“ã§ã—ãŸã€‚: $!",@_);
     foreach (@{$tables{$hash_tables_key}}) {
         $data_ref->{$_} =~ s/\r?\n/\x0b/g;
         $data_ref->{$_} =~ s/\t/ /g;
@@ -1852,7 +1850,7 @@ sub table_select {
     my($tablename,$cond,$order,$path) = @_;
     my $real_tablename = $tablename;
 
-    ### tboard.cgiÍÑ¤Î³ÈÄ¥ÉôÊ¬ ¤³¤³¤«¤é ####
+    ### tboard.cgiç”¨ã®æ‹¡å¼µéƒ¨åˆ† ã“ã“ã‹ã‚‰ ####
     if ($tablename eq 'tboard_message.cgi') {
         if ($cond =~ /msgno=(\d+)/) {
             ($real_tablename, $path) = ("$1.cgi", "data/message");
@@ -1860,7 +1858,7 @@ sub table_select {
             ($real_tablename, $path) = ("$1.cgi", "data/tree");
         }
     }
-    ### tboard.cgiÍÑ¤Î³ÈÄ¥ÉôÊ¬ ¤³¤³¤Ş¤Ç ####
+    ### tboard.cgiç”¨ã®æ‹¡å¼µéƒ¨åˆ† ã“ã“ã¾ã§ ####
 
     $path ||= "data";
     ($path) = $path =~ m#^((?:\.\./|[^/]?)[/\d\w]+)$#;
@@ -1917,7 +1915,7 @@ sub table_select {
 
     $LOCKED = file_lock() unless $LOCKED;
     open(R, "$path/$real_tablename")
-     or error("table_select: ¥Æ¡¼¥Ö¥ë¥Ç¡¼¥¿¥Õ¥¡¥¤¥ë¤¬³«¤±¤Ş¤»¤ó¤Ç¤·¤¿¡£: $!",@_);
+     or error("table_select: ãƒ†ãƒ¼ãƒ–ãƒ«ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«ãŒé–‹ã‘ã¾ã›ã‚“ã§ã—ãŸã€‚: $!",@_);
     while (<R>) {
         my %d;
         my %hit;
@@ -1978,26 +1976,26 @@ sub table_update {
     my($tablename,$data_ref,$key,$path) = @_;
     my $hash_tables_key = $tablename;
 
-    ### tboard.cgiÍÑ¤Î³ÈÄ¥ÉôÊ¬ ¤³¤³¤«¤é ####
+    ### tboard.cgiç”¨ã®æ‹¡å¼µéƒ¨åˆ† ã“ã“ã‹ã‚‰ ####
     if (($tablename) = $tablename =~ /^(\d+\.cgi)$/) {
         $hash_tables_key = "tboard_message.cgi";
     } else {
         $tablename = $hash_tables_key;
     }
-    ### tboard.cgiÍÑ¤Î³ÈÄ¥ÉôÊ¬ ¤³¤³¤Ş¤Ç ####
+    ### tboard.cgiç”¨ã®æ‹¡å¼µéƒ¨åˆ† ã“ã“ã¾ã§ ####
 
 
     $path ||= "data";
     ($path) = $path =~ m#^((?:\.\./|[^/]?)[/\d\w]+)$#;
     my($k,$v) = split(/\s*=\s*/, $key);
-    error("¾È¹ç¾ò·ï¤¬»ØÄê¤µ¤ì¤Æ¤¤¤Ş¤»¤ó¡£: $key") unless $k;
+    error("ç…§åˆæ¡ä»¶ãŒæŒ‡å®šã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚: $key") unless $k;
 
     my @data;
     my @updated;
 
     $LOCKED = file_lock() unless $LOCKED;
     open(R, "$path/$tablename")
-     or error("¥Æ¡¼¥Ö¥ë¥Ç¡¼¥¿¥Õ¥¡¥¤¥ë¤¬³«¤±¤Ş¤»¤ó¤Ç¤·¤¿¡£: $!",@_);
+     or error("ãƒ†ãƒ¼ãƒ–ãƒ«ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«ãŒé–‹ã‘ã¾ã›ã‚“ã§ã—ãŸã€‚: $!",@_);
     while (my $line = <R>) {
         my %d;
         chomp($line);
@@ -2010,7 +2008,7 @@ sub table_update {
                 $data_ref->{$_} =~ s/\t/ /g;
                 $d{$_} = $data_ref->{$_};
             }
-            # ¥­¡¼¤Î¤¢¤ë¥Õ¥£¡¼¥ë¥É¤Î¤ß¾å½ñ¤­
+            # ã‚­ãƒ¼ã®ã‚ã‚‹ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®ã¿ä¸Šæ›¸ã
             push(@data, join("\t", @d{@{$tables{$hash_tables_key}}}));
         } else {
             push(@data, $line);
@@ -2018,7 +2016,7 @@ sub table_update {
     }
 
     open(W, ">$path/$tablename")
-     or error("¥Æ¡¼¥Ö¥ë¥Ç¡¼¥¿¥Õ¥¡¥¤¥ë¤¬³«¤±¤Ş¤»¤ó¤Ç¤·¤¿¡£: $!",@_);
+     or error("ãƒ†ãƒ¼ãƒ–ãƒ«ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«ãŒé–‹ã‘ã¾ã›ã‚“ã§ã—ãŸã€‚: $!",@_);
     foreach (@data) { print W "$_\n"; }
     close(W);
 
@@ -2029,17 +2027,17 @@ sub table_update {
 sub tempfile_clean {
 
     my $time = time;
-    ### Åê¹Æ°ì»ş¥Ç¡¼¥¿¥Õ¥¡¥¤¥ë¤Îºï½ü
-    opendir(DIR, "temp") or error("temp¥Ç¥£¥ì¥¯¥È¥ê¤¬³«¤±¤Ş¤»¤ó¤Ç¤·¤¿¡£: $!");
+    ### æŠ•ç¨¿ä¸€æ™‚ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«ã®å‰Šé™¤
+    opendir(DIR, "temp") or error("tempãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªãŒé–‹ã‘ã¾ã›ã‚“ã§ã—ãŸã€‚: $!");
     foreach my $file(grep(/^\w+$/, readdir(DIR))) {
         ($file) = $file =~ /^(\w+)$/;
         unlink("temp/$file")
          if $time - (stat("temp/$file"))[9] > $CONF{tempfile_del_hour} * 3600;
     }
-    ### cid¥Õ¥¡¥¤¥ë¡¢¥í¥°¥¤¥ó¥»¥Ã¥·¥ç¥ó¥Õ¥¡¥¤¥ë¤Îºï½ü
+    ### cidãƒ•ã‚¡ã‚¤ãƒ«ã€ãƒ­ã‚°ã‚¤ãƒ³ã‚»ãƒƒã‚·ãƒ§ãƒ³ãƒ•ã‚¡ã‚¤ãƒ«ã®å‰Šé™¤
     foreach my $dir(qw(login cid)) {
         opendir(DIR, "temp/$dir")
-         or error("temp/$dir¥Ç¥£¥ì¥¯¥È¥ê¤¬³«¤±¤Ş¤»¤ó¤Ç¤·¤¿¡£: $!");
+         or error("temp/$dirãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªãŒé–‹ã‘ã¾ã›ã‚“ã§ã—ãŸã€‚: $!");
         foreach my $file(grep(/^\w+$/, readdir(DIR))) {
             ($file) = $file =~ /^(\w+)$/;
             unlink("temp/$dir/$file")
@@ -2073,10 +2071,10 @@ sub write_conf {
 
     my $ref = shift;
     open(W, "> tboard_conf.pl")
-     or error("´Ä¶­ÀßÄê¥Õ¥¡¥¤¥ë(tboard_conf.pl)¤Ø¤Î½ñ¤­½Ğ¤·¤Ë¼ºÇÔ¤·¤Ş¤·¤¿¡£: $!");
+     or error("ç’°å¢ƒè¨­å®šãƒ•ã‚¡ã‚¤ãƒ«(tboard_conf.pl)ã¸ã®æ›¸ãå‡ºã—ã«å¤±æ•—ã—ã¾ã—ãŸã€‚: $!");
     print W <<__CONF_FILE_STR__;
 #
-# $ref->{prod_name} v$ref->{version} ´Ä¶­ÀßÄê¥Õ¥¡¥¤¥ë
+# $ref->{prod_name} v$ref->{version} ç’°å¢ƒè¨­å®šãƒ•ã‚¡ã‚¤ãƒ«
 #
 sub conf {
 
@@ -2109,13 +2107,13 @@ __CONF_FILE_STR__
 sub view {
 
     #+----------------+----------------------+------------+
-    #| ¼±ÊÌ»Ò(t)      | É½¼¨¥¿¥¤¥×           | ¥½¡¼¥ÈÊıË¡ |
+    #| è­˜åˆ¥å­(t)      | è¡¨ç¤ºã‚¿ã‚¤ãƒ—           | ã‚½ãƒ¼ãƒˆæ–¹æ³• |
     #+----------------+----------------------+------------+
-    #| tree (default) | ¥Ä¥ê¡¼É½¼¨           | rd,lu      |
-    #| thread         | ¥¹¥ì¥Ã¥ÉÉ½¼¨         | lu         |
-    #| list           | Åê¹Æ½ç(¥¿¥¤¥È¥ë°ìÍ÷) | msgno      |
-    #| list2          | ¡·(Á´É½¼¨)           | msgno      |
-    #| topic          | ¥È¥Ô¥Ã¥¯É½¼¨         | rd         |
+    #| tree (default) | ãƒ„ãƒªãƒ¼è¡¨ç¤º           | rd,lu      |
+    #| thread         | ã‚¹ãƒ¬ãƒƒãƒ‰è¡¨ç¤º         | lu         |
+    #| list           | æŠ•ç¨¿é †(ã‚¿ã‚¤ãƒˆãƒ«ä¸€è¦§) | msgno      |
+    #| list2          | ã€ƒ(å…¨è¡¨ç¤º)           | msgno      |
+    #| topic          | ãƒˆãƒ”ãƒƒã‚¯è¡¨ç¤º         | rd         |
     #+----------------+----------------------+------------+
 
     file_lock();
@@ -2124,9 +2122,9 @@ sub view {
 
     (my $type = $FORM{t}) ||= "tree";
     my %allowed_t = map { $_ => 1 } qw(tree thread list list2 topic);
-    $allowed_t{$type} or error("Åê¹Æ°ìÍ÷·Á¼°¤Î»ØÄê(t)¤¬Àµ¤·¤¯¤¢¤ê¤Ş¤»¤ó¡£");
+    $allowed_t{$type} or error("æŠ•ç¨¿ä¸€è¦§å½¢å¼ã®æŒ‡å®š(t)ãŒæ­£ã—ãã‚ã‚Šã¾ã›ã‚“ã€‚");
 
-    ### ¥Ç¡¼¥¿¤Î¼è¤ê½Ğ¤·¤ÈÁ´·ï¿ô¤Î¼èÆÀ
+    ### ãƒ‡ãƒ¼ã‚¿ã®å–ã‚Šå‡ºã—ã¨å…¨ä»¶æ•°ã®å–å¾—
     my @tree;
     if ($type eq 'tree' or $type eq 'thread' or $type eq 'topic') {
         @tree = table_select("tboard_tree.cgi","",
@@ -2137,7 +2135,7 @@ sub view {
     }
     $rv{cnt_all} = @tree;
 
-    ### ¥Ú¡¼¥¸¥ê¥ó¥¯¤ÎºîÀ®
+    ### ãƒšãƒ¼ã‚¸ãƒªãƒ³ã‚¯ã®ä½œæˆ
     my $query = join("", map {"&$_=$FORM{$_}"} grep {$FORM{$_} ne ""} qw(t o));
     if ($FORM{p} > 0) {
         my $pre = $FORM{p} - $CONF{"page_disp_$type"};
@@ -2152,13 +2150,13 @@ sub view {
         $rv{next} = $CONF{next0str};
     }
 
-    ### ¸½ºß¤Î¥Ú¡¼¥¸¤ÈÁí¥Ú¡¼¥¸¿ô¤Î»»½Ğ
+    ### ç¾åœ¨ã®ãƒšãƒ¼ã‚¸ã¨ç·ãƒšãƒ¼ã‚¸æ•°ã®ç®—å‡º
     $rv{page_c} = $FORM{p} / $CONF{"page_disp_$type"} + 1;
     $rv{page_all} = int($rv{cnt_all} / $CONF{"page_disp_$type"})
                    + (($rv{cnt_all} % $CONF{"page_disp_$type"}) ? 1 : 0);
 
-    ### ¥Ú¡¼¥¸°ÜÆ°¥Ê¥Ó¤ÎÀ¸À®
-    $rv{navi} = join("¡¡", $rv{prev}, $rv{next}, ("[ " . join(" | ", map { $_==$rv{page_c} ? qq{<b>$_</b>} : (qq{<a href="$CONF{script_name}?p=} . ($CONF{"page_disp_$type"} * ($_ - 1)) . qq{$query">$_</a>}) } 1..$rv{page_all}) . " ]") );
+    ### ãƒšãƒ¼ã‚¸ç§»å‹•ãƒŠãƒ“ã®ç”Ÿæˆ
+    $rv{navi} = join("ã€€", $rv{prev}, $rv{next}, ("[ " . join(" | ", map { $_==$rv{page_c} ? qq{<b>$_</b>} : (qq{<a href="$CONF{script_name}?p=} . ($CONF{"page_disp_$type"} * ($_ - 1)) . qq{$query">$_</a>}) } 1..$rv{page_all}) . " ]") );
 
     my %topic;
     if ($type eq 'topic') {
@@ -2188,18 +2186,18 @@ sub view {
         }
     }
 
-    $rv{list} ||= "<br>Åê¹Æ¥Ç¡¼¥¿¤Ï¤¢¤ê¤Ş¤»¤ó¡£<p>";
+    $rv{list} ||= "<br>æŠ•ç¨¿ãƒ‡ãƒ¼ã‚¿ã¯ã‚ã‚Šã¾ã›ã‚“ã€‚<p>";
     $rv{list} = $CONF{list_header}->{$type} . $rv{list} . $CONF{list_footer}->{$type};
     foreach (qw(body_text body_bgcolor)) {
         $rv{list} =~ s/##$_##/$CONF{$_}/g;
     }
     $rv{navi_bar} = mk_navi_bar($type, %FORM);
 
-    # ¥·¥ê¥¢¥ëID¥Á¥§¥Ã¥¯
+    # ã‚·ãƒªã‚¢ãƒ«IDãƒã‚§ãƒƒã‚¯
     $FORM{sid} = get_cookie("TBOARD_CID");
 
     set_cid();
-    print _header("Åê¹Æ°ìÍ÷");
+    print _header("æŠ•ç¨¿ä¸€è¦§");
     print <<HTML;
 <table class=description>
 <tr><td>$CONF{description}</td></tr>
@@ -2223,7 +2221,7 @@ HTML
 
 sub view2 {
 
-    $FORM{view2} or error("Åê¹ÆÈÖ¹æ¤ò»ØÄê¤·¤Æ¤¯¤À¤µ¤¤¡£");
+    $FORM{view2} or error("æŠ•ç¨¿ç•ªå·ã‚’æŒ‡å®šã—ã¦ãã ã•ã„ã€‚");
 
     my $str = mk_shousai_html($FORM{view2});
 
@@ -2253,17 +2251,17 @@ HTML
     }
     if (@icon_list % 4) {
         foreach (1..(4 - @icon_list % 4)) {
-            $list .= "<td bgcolor=$CONF{body_bgcolor} colspan=2>¡¡</td>\n";
+            $list .= "<td bgcolor=$CONF{body_bgcolor} colspan=2>ã€€</td>\n";
         }
     }
-    print _header("¥¢¥¤¥³¥ó°ìÍ÷");
+    print _header("ã‚¢ã‚¤ã‚³ãƒ³ä¸€è¦§");
     print <<HTML;
 <p><table border=0 cellpadding=0 cellspacing=0 bgcolor=$CONF{body_text} align=center>
 <tr><td><table border=0 cellpadding=3 cellspacing=1>
 HTML
     print $list;
     print "</td></tr></table></td></tr></table><p>\n";
-    print "<div align=center><a href=javascript:window.close()>¥¦¥¤¥ó¥É¥¦¤òÊÄ¤¸¤ë</a></div><p>\n";
+    print "<div align=center><a href=javascript:window.close()>ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã‚’é–‰ã˜ã‚‹</a></div><p>\n";
     print _footer();
     exit;
 

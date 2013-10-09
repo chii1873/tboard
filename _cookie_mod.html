@@ -1,15 +1,15 @@
-���ʤ��Υ֥饦���˵�Ͽ����Ƥ���cookie�ǡ������Խ����Ǥ��ޤ���<br>
+あなたのブラウザに記録されているcookieデータの編集ができます。<br>
 
 <form action=##script_name## method=post>
 
 <table border=0 cellpadding=0 cellspacing=0 bgcolor=##body_text## width=700>
 <tr><td><table border=0 cellpadding=3 cellspacing=1 width=100%>
-<tr><td bgcolor=##body_bgcolor##>1�ڡ�����ɽ�������</td>
+<tr><td bgcolor=##body_bgcolor##>1ページに表示する数</td>
 <td bgcolor=##body_bgcolor##>
 
 <table border=0 cellpadding=0 cellspacing=0 bgcolor=##body_text##>
 <tr><td><table border=0 cellpadding=3 cellspacing=1 width=100%>
-<tr><td bgcolor=##body_bgcolor##>�ĥ꡼ɽ��</td>
+<tr><td bgcolor=##body_bgcolor##>ツリー表示</td>
 <td bgcolor=##body_bgcolor##><select name=page_disp_tree>
 <option ##page_disp_tree:1##>1
 <option ##page_disp_tree:2##>2
@@ -26,8 +26,8 @@
 <option ##page_disp_tree:20##>20
 <option ##page_disp_tree:25##>25
 <option ##page_disp_tree:30##>30
-</select>�ĥ꡼/�ڡ���</td></tr>
-<tr><td bgcolor=##body_bgcolor##>����å�ɽ��</td>
+</select>ツリー/ページ</td></tr>
+<tr><td bgcolor=##body_bgcolor##>スレッド表示</td>
 <td bgcolor=##body_bgcolor##><select name=page_disp_thread>
 <option ##page_disp_thread:1##>1
 <option ##page_disp_thread:2##>2
@@ -44,8 +44,8 @@
 <option ##page_disp_thread:20##>20
 <option ##page_disp_thread:25##>25
 <option ##page_disp_thread:30##>30
-</select>����å�/�ڡ���</td></tr>
-<tr><td bgcolor=##body_bgcolor##>��ƽ�(�����ȥ�Τ�)</td>
+</select>スレッド/ページ</td></tr>
+<tr><td bgcolor=##body_bgcolor##>投稿順(タイトルのみ)</td>
 <td bgcolor=##body_bgcolor##><select name=page_disp_list>
 <option ##page_disp_list:1##>1
 <option ##page_disp_list:2##>2
@@ -62,8 +62,8 @@
 <option ##page_disp_list:20##>20
 <option ##page_disp_list:25##>25
 <option ##page_disp_list:30##>30
-</select>��/�ڡ���</td></tr>
-<tr><td bgcolor=##body_bgcolor##>��ƽ�(��ɽ��)</td>
+</select>件/ページ</td></tr>
+<tr><td bgcolor=##body_bgcolor##>投稿順(全表示)</td>
 <td bgcolor=##body_bgcolor##><select name=page_disp_list2>
 <option ##page_disp_list2:1##>1
 <option ##page_disp_list2:2##>2
@@ -80,8 +80,8 @@
 <option ##page_disp_list2:20##>20
 <option ##page_disp_list2:25##>25
 <option ##page_disp_list2:30##>30
-</select>��/�ڡ���</td></tr>
-<tr><td bgcolor=##body_bgcolor##>�ȥԥå�(�Ƶ����Τ�)ɽ��</td>
+</select>件/ページ</td></tr>
+<tr><td bgcolor=##body_bgcolor##>トピック(親記事のみ)表示</td>
 <td bgcolor=##body_bgcolor##><select name=page_disp_topic>
 <option ##page_disp_topic:1##>1
 <option ##page_disp_topic:2##>2
@@ -98,66 +98,66 @@
 <option ##page_disp_topic:20##>20
 <option ##page_disp_topic:25##>25
 <option ##page_disp_topic:30##>30
-</select>�ȥԥå�/�ڡ���</td></tr>
+</select>トピック/ページ</td></tr>
 </table></td></tr></table>
 </td></tr>
-<tr><td bgcolor=##body_bgcolor##>��ư����Υǥե���ȥ⡼��</td>
+<tr><td bgcolor=##body_bgcolor##>投稿一覧のデフォルトモード</td>
 <td bgcolor=##body_bgcolor##>
-<input type=radio name=disp_type_default value=tree ##disp_type_default:tree##>�ĥ꡼ɽ��<br>
-<input type=radio name=disp_type_default value=thread ##disp_type_default:thread##>����å�ɽ��<br>
-<input type=radio name=disp_type_default value=list ##disp_type_default:list##>��ƽ�(�����ȥ�Τ�)<br>
-<input type=radio name=disp_type_default value=list2 ##disp_type_default:list##>��ƽ�(��ɽ��)<br>
-<input type=radio name=disp_type_default value=topic ##disp_type_default:topic##>�ȥԥå�(�Ƶ����Τ�)ɽ��
+<input type=radio name=disp_type_default value=tree ##disp_type_default:tree##>ツリー表示<br>
+<input type=radio name=disp_type_default value=thread ##disp_type_default:thread##>スレッド表示<br>
+<input type=radio name=disp_type_default value=list ##disp_type_default:list##>投稿順(タイトルのみ)<br>
+<input type=radio name=disp_type_default value=list2 ##disp_type_default:list##>投稿順(全表示)<br>
+<input type=radio name=disp_type_default value=topic ##disp_type_default:topic##>トピック(親記事のみ)表示
 </td></tr>
-<tr><td nowrap bgcolor="##body_bgcolor##">��̾��</td>
+<tr><td nowrap bgcolor="##body_bgcolor##">お名前</td>
 <td bgcolor="##body_bgcolor##"><input name=name value="##name##" size=30 maxlength=30><br>
 <!-- OPT_SEX_BEGIN -->
-���̡�<select name=sex><option value="">##sexlist##</select>��
+性別：<select name=sex><option value="">##sexlist##</select>　
 <!-- OPT_SEX_END -->
 <!-- OPT_AGE_BEGIN -->
-ǯ��<select name=age><option value="">##agelist##</select>��
+年齢：<select name=age><option value="">##agelist##</select>　
 <!-- OPT_AGE_END -->
 <!-- OPT_PREF_BEGIN -->
-�ϰ衧<select name=pref><option value="">##preflist##</select>��
+地域：<select name=pref><option value="">##preflist##</select>　
 <!-- OPT_PREF_END -->
 </td></tr>
 <tr><td bgcolor="##body_bgcolor##">E-mail</td>
 <td bgcolor="##body_bgcolor##"><input name=email value="##email##" size=40>
-<span class=description>[<input type=radio name=email_mode value=1 ##email_mode:1##>����
+<span class=description>[<input type=radio name=email_mode value=1 ##email_mode:1##>公開
 <!-- OPT_EMAIL_MODE_BEGIN -->
-<input type=radio name=email_mode value=2 ##email_mode:2##>ž��
+<input type=radio name=email_mode value=2 ##email_mode:2##>転送
 <!-- OPT_EMAIL_MODE_END -->
-<input type=radio name=email_mode value=0 ##email_mode:0##>�����]
+<input type=radio name=email_mode value=0 ##email_mode:0##>非公開]
 <!-- OPT_NOTIFY_BEGIN -->
 <br>
-<input type=checkbox name=notify value=1 ##notify:1##>�쥹���Ĥ����Ȥ��˥᡼����Τ餻��
+<input type=checkbox name=notify value=1 ##notify:1##>レスがついたときにメールで知らせる
 <!-- OPT_NOTIFY_END -->
 </span><sub> </sub><br>
-<span class=description>���ָ����פ����֤ȡ����ɥ쥹�����������󥯤��Τ�줺�˥᡼��������뤳�Ȥ��Ǥ��ޤ���<br>
+<span class=description>※「公開」を選ぶと、アドレスを公開し、リンクを知られずにメールを受け取ることができます。<br>
 <!-- OPT_EMAIL_MODE_BEGIN -->
-����ž���פ����֤ȡ����ɥ쥹���Τ�줺�˥᡼��������뤳�Ȥ��Ǥ��ޤ���<br>
+※「転送」を選ぶと、アドレスを知られずにメールを受け取ることができます。<br>
 <!-- OPT_EMAIL_MODE_END -->
-����������פ����֤ȡ������ͤΤߤ˥��ɥ쥹�������뤳�Ȥ��Ǥ��ޤ���
+※「非公開」を選ぶと、管理人のみにアドレスを伝えることができます。
 </span></td></tr>
 <!-- OPT_URL_BEGIN -->
 <tr><td bgcolor="##body_bgcolor##">URL</td>
 <td bgcolor="##body_bgcolor##"><input name=url value="##url##" size=50></td></tr>
 <!-- OPT_URL_END -->
-<tr><td bgcolor="##body_bgcolor##">��̾��ʸ����</td>
+<tr><td bgcolor="##body_bgcolor##">件名の文字色</td>
 <td bgcolor="##body_bgcolor##">##subject_colorlist##</td></tr>
-<tr><td bgcolor="##body_bgcolor##">��ʸ��ʸ����</td>
+<tr><td bgcolor="##body_bgcolor##">本文の文字色</td>
 <td bgcolor="##body_bgcolor##">##message_colorlist##</td></tr>
 <!-- OPT_ICON_BEGIN -->
-<tr><td bgcolor="##body_bgcolor##">��������</td>
+<tr><td bgcolor="##body_bgcolor##">アイコン</td>
 <td bgcolor="##body_bgcolor##">
 <select name=icon>
 <option value="">
-##iconlist##</select>��<a href=##script_name##?view_icon target=icon>�����������</a>
+##iconlist##</select>　<a href=##script_name##?view_icon target=icon>アイコン一覧</a>
 </td></tr>
 <!-- OPT_ICON_END -->
-<tr><td bgcolor="##body_bgcolor##">����/����ѥѥ����</td>
+<tr><td bgcolor="##body_bgcolor##">修正/削除用パスワード</td>
 <td bgcolor="##body_bgcolor##"><input type=password name=passwd value="##passwd##" size=8></td></tr>
 </table></td></tr></table><p>
 
-<input type=submit name=cookie_mod_done value="�嵭�����Ƥ����ꤹ��" style=background-color:##body_bgcolor##;border:solid;border-width:1px;border-color:##body_text##;>
-<input type=button value="�ᡡ��" onclick="history.back()" style=background-color:##body_bgcolor##;border:solid;border-width:1px;border-color:##body_text##;>
+<input type=submit name=cookie_mod_done value="上記の内容で設定する" style=background-color:##body_bgcolor##;border:solid;border-width:1px;border-color:##body_text##;>
+<input type=button value="戻　る" onclick="history.back()" style=background-color:##body_bgcolor##;border:solid;border-width:1px;border-color:##body_text##;>
